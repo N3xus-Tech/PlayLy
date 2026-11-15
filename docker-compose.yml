@@ -1,0 +1,13 @@
+services:
+  digital-bridge-track2:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.example
+    environment:
+      CERTIFICATE_SECRET: ${CERTIFICATE_SECRET:-development-only-change-me-before-production}
+    volumes:
+      - ./api/data:/app/api/data

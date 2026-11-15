@@ -1,0 +1,51 @@
+{
+  "va-future": {
+    "id": "va-future",
+    "title": "The Future of the VA Industry",
+    "video": "/savanna/assets/media/va-future-lesson.mp4",
+    "sign": "/savanna/assets/media/va-future-ethsl.mp4",
+    "audio": "/savanna/assets/media/va-future-audio.mp3",
+    "captions": {
+      "en": "/savanna/assets/captions/va-future-en.vtt",
+      "am": "/savanna/assets/captions/va-future-am.vtt"
+    },
+    "descriptions": {
+      "en": "/savanna/assets/captions/va-future-ad-en.vtt",
+      "am": "/savanna/assets/captions/va-future-ad-am.vtt"
+    },
+    "offline_pack_bytes": 285000
+  },
+  "html-h1-tag": {
+    "id": "html-h1-tag",
+    "title": "What is the H1 tag on HTML",
+    "video": "/savanna/assets/media/va-future-lesson.mp4",
+    "sign": "/savanna/assets/media/va-future-ethsl.mp4",
+    "audio": "/savanna/assets/media/va-future-audio.mp3",
+    "captions": {
+      "en": "/savanna/assets/captions/va-future-en.vtt",
+      "am": "/savanna/assets/captions/va-future-am.vtt"
+    },
+    "descriptions": {
+      "en": "/savanna/assets/captions/va-future-ad-en.vtt",
+      "am": "/savanna/assets/captions/va-future-ad-am.vtt"
+    },
+    "offline_pack_bytes": 285000
+  },
+  "html-div-intro": {
+    "id": "html-div-intro",
+    "title": "Introduction to HTML Divs",
+    "video": "/savanna/assets/media/va-future-lesson.mp4",
+    "sign": "/savanna/assets/media/va-future-ethsl.mp4",
+    "audio": "/savanna/assets/media/va-future-audio.mp3",
+    "captions": {
+      "en": "/savanna/assets/captions/va-future-en.vtt",
+      "am": "/savanna/assets/captions/va-future-am.vtt"
+    },
+    "descriptions": {
+      "en": "/savanna/assets/captions/va-future-ad-en.vtt",
+      "am": "/savanna/assets/captions/va-future-ad-am.vtt"
+    },
+    "offline_pack_bytes": 285000,
+    "viewer_url": "/savanna/pages/concept-with-navigation.html?lesson=html-div-intro"
+  }
+}

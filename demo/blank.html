@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plugin Isolation Proof (Outside Savanna) — Track 2 Accessible Learning Media</title>
+  <!-- 1. Load the module with a single script tag (zero Bootstrap, zero Savanna CSS) -->
+  <script src="/module/db-player.js" defer></script>
+</head>
+<body style="max-width: 64rem; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; color: #101828; background: #ffffff;">
+  <header style="margin-bottom: 1.5rem; border-bottom: 2px solid #05192d; padding-bottom: 1rem;">
+    <h1 style="margin: 0 0 0.5rem 0; color: #05192d;">External Host Proof (<code>demo/blank.html</code>)</h1>
+    <p style="margin: 0; color: #334155;">
+      This page has <strong>no Bootstrap and no Savanna CSS</strong>. Both <code>&lt;db-player&gt;</code> and <code>&lt;db-job-card&gt;</code> load from a single script tag (<code>/module/db-player.js</code>) and communicate with the host via CustomEvents.
+    </p>
+    <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <button type="button" id="switch-en" style="min-height: 44px; padding: 0.4rem 0.85rem; font-weight: 700; cursor: pointer;">Switch Host to English (lang="en")</button>
+      <button type="button" id="switch-am" style="min-height: 44px; padding: 0.4rem 0.85rem; font-weight: 700; cursor: pointer;">Switch Host to Amharic (lang="am")</button>
+      <a href="/savanna/pages/concept-with-navigation.html" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0.4rem 0.85rem; color: #0d5c3a; font-weight: 700;">Open Inside Savanna Host &rarr;</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- 2. Place the accessible media player -->
+    <p style="margin: 0.5rem 0 1rem 0; font-size: 0.9rem; color: #0d5c3a; font-weight: 600;">
+      🤟 Synchronized Ethiopian Sign Language (EthSL) prerecorded video player (WCAG 1.2.6 AAA human interpretation video, not AI-supported sign translation).
+    </p>
+    <db-player
+      id="demo-player"
+      title="The Future of the VA Industry"
+      src="/savanna/assets/media/va-future-lesson.mp4"
+      captions="/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
+      sign="/savanna/assets/media/va-future-ethsl.mp4"
+      describe="/savanna/assets/captions/va-future-ad-en.vtt,/savanna/assets/captions/va-future-ad-am.vtt"
+      api="/api/v1"
+      lesson-id="va-future"
+      offline-worker="/service-worker.js"
+      lang="en">
+    </db-player>
+
+    <h2 style="margin-top: 2rem; color: #05192d;">Career Gateway Component (<code>&lt;db-job-card&gt;</code>)</h2>
+    <db-job-card id="demo-job" api="/api/v1" job-id="accessible-va" lang="en"></db-job-card>
+
+    <section aria-labelledby="event-log-heading" style="margin-top: 2rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 1rem;">
+      <h2 id="event-log-heading" style="margin-top: 0; font-size: 1.1rem; color: #05192d;">Host CustomEvent Listener Log</h2>
+      <pre id="event-log" style="margin: 0; font-size: 0.88rem; white-space: pre-wrap;">Listening for db-player:progress, db-player:prefs, db-player:complete, and db-job-card:accommodation-requested...</pre>
+    </section>
+  </main>
+
+  <!-- 3. Optionally listen to plugin events -->
+  <script>
+    const log = document.getElementById("event-log");
+    ["db-player:prefs", "db-player:complete", "db-job-card:accommodation-requested"].forEach((evtName) => {
+      document.addEventListener(evtName, (e) => {
+        log.textContent = `[${new Date().toLocaleTimeString()}] ${evtName}: ` + JSON.stringify(e.detail);
+      });
+    });
+    document.getElementById("switch-en").addEventListener("click", () => {
+      document.getElementById("demo-player").setAttribute("lang", "en");
+      document.getElementById("demo-job").setAttribute("lang", "en");
+    });
+    document.getElementById("switch-am").addEventListener("click", () => {
+      document.getElementById("demo-player").setAttribute("lang", "am");
+      document.getElementById("demo-job").setAttribute("lang", "am");
+    });
+  </script>
+</body>
+</html>
