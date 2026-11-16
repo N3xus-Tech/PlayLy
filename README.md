@@ -1,147 +1,180 @@
-# Savanna Accessible Learning Media Plugin (`db-player`, Track 2)
+# PlayLy (`<db-player>`, Track 2) — Accessible Learning Media & Career Gateway
 
-- **Track:** Track 2 — Accessible Learning Media & Career Gateway
-- **Team / Builder:** Abel Alemayehu Garedew & Team PlayLy (Digital Bridge Ethiopia 2026)
-- **Co-Designer Testing Profile:** Built and verified for Deaf learners (Dual-Engine Ethiopian Sign Language: Live Real-Time Speech/Text-to-EthSL SOV Gloss + 21-Point Hand Signer AND Synchronized Prerecorded Video PiP + Deaf Sensory Audio/Haptic Radar), Blind & Low-Vision learners ("Over-Cooked" Blind Audio Console: Spatial Web Audio Earcons, Hands-Free Voice Copilot, Instant Visual Scene Inspector `I`, DAISY Chapter Hopping `1–6`, Interactive 6-Dot Tactile Braille Inspector + `.brf` export, and 200% zoom), and 3G low-bandwidth learners (`< 300 KB` 3G Offline Pack + 80% Data-Saving 3G Keyframe Mode).
+- **Hackathon:** ALX Digital Bridge Accessibility Hackathon 2026 (`digitalbridge.et`)
+- **Track:** Track 2 — Accessible Learning Media, Transcript Pipeline & Career Gateway
+- **Team / Builder:** Abel Alemayehu Garedew & Team PlayLy
+- **Target Users & Assistive Tech Verified:**
+  - **Deaf & Hard-of-Hearing Learners:** Dual-Engine Ethiopian Sign Language (EthSL) Studio (combining **Live Real-Time Speech/Caption/Text-to-EthSL Subject-Object-Verb Gloss + 60 FPS 21-Point Hand Signer** AND **Synchronized Prerecorded Video PiP**), YouTube-grade interactive bilingual captions (`EN`, `አማ`, and stacked `EN+አማ`), and Deaf Sensory Audio/Haptic Rhythm Radar (`navigator.vibrate`).
+  - **Blind & Low-Vision Learners:** Built for **Chrome Screen Reader extensions**, **NVDA (Windows)**, and **Android TalkBack** (`role="menu"`, `menuitemcheckbox`, `aria-valuetext` scrubber announcements, `>= 44px` touch targets, shielded third-party embeds with zero focus traps) plus an **"Over-Cooked" Blind Audio & Braille Console** (Web Audio spatial earcons, Hands-Free Voice Copilot `V`, Instant Visual Scene Inspector `I`, DAISY Chapter Hopping `1–8`, Interactive 6-Dot Tactile Braille Cell Inspector, and Grade 1 `.brf` export).
+  - **3G & Offline Learners in Ethiopia:** `< 300 KB` 3G Offline ZIP Pack + In-Player **3G Smart Data-Saver Mode** (switches to synchronized slide keyframes + MP3 audio to save 80% mobile data).
 
-## What it does
-PlayLy (`<db-player>`, `<db-job-card>`, and `<db-live-viewer>`) is a zero-dependency Web Component plugin and FastAPI backend (`/api/v1/*`) that upgrades ALX Savanna or any learning platform with YouTube-grade interactive bilingual captions (`EN`, `አማ`, and stacked `EN+አማ` dual subtitles), a movable/resizable Dual-Engine Ethiopian Sign Language (EthSL) Studio (combining a **Live Real-Time Speech/Caption-to-EthSL Subject-Object-Verb Gloss & 60 FPS Kinematic Signer** with **Synchronized Human Video PiP**), an "Over-Cooked" Blind Audio & Braille Console, and a Deaf Sensory Audio/Haptic Radar. It also includes an accessible Career Gateway with spoken job summaries, private interview accommodation requests, `schema.org/JobPosting` JSON-LD, and Open Badges 3.0 cryptographic credential verification. It installs on any host site with a single `<script>` tag.
+---
 
-## The main task we tested
-"A Deaf, blind, or 3G-constrained learner opens a Savanna lesson or external host page, operates the lesson unaided by keyboard, screen reader, or voice command using the movable Real-Time / Synchronized Ethiopian Sign Language window, YouTube-style dual Amharic/English captions, or Over-Cooked Blind Audio Console (spatial earcons, `I` visual scene inspector, `1–6` chapter hopping, and `.brf` Braille export), and requests an interview accommodation on the Career Gateway with a verifiable Open Badges 3.0 certificate."
+## 1. What It Does (In Plain English)
+PlayLy is a zero-dependency Web Component plugin (`<db-player>`, `<db-job-card>`, and `<db-live-viewer>`) and FastAPI backend (`/api/v1/*`) that drops into ALX Savanna or any learning platform with a single `<script>` tag. It pairs a **YouTube-exact widescreen cinema player** (overlaid red progress scrubber, bottom-left play/volume/time pill, centered interactive subtitles, bottom-right icon cluster, and translucent frosted-glass **Settings** and **Context** menus) with **100% audio-video-caption-sign synchronized media**, real live-action internet video streams ([W3C Web Accessibility Perspectives](https://www.w3.org/WAI/perspective-videos/) and [YouTube Live Embeds](https://www.youtube.com/watch?v=GZFoexLsMi8)), real-time Ethiopian Sign Language translation, and a verifiable Open Badges 3.0 Career Gateway.
 
-## Run it
-Run the entire stack with one command:
-```bash
-docker compose up --build
-```
-*(Or without Docker using Python 3.10+)*:
+---
+
+## 2. How Audio, Video, Captions & Sign Language Are Synchronized
+Every media source in `<db-player>` is 100% synchronized across audio, video visuals, bilingual captions, and Ethiopian Sign Language:
+1. **Featured Local Studio Lesson (`/savanna/assets/media/kimi-3d-ceramics.mp4` & `va-future-lesson.mp4`):**
+   - Video chapter cards, English captions (`va-future-en.vtt`), Amharic captions (`va-future-am.vtt`), and the EthSL Sign Language video (`va-future-ethsl.mp4`) are locked to the exact 8 spoken segments (`0.00s` to `39.50s`) of the recorded audio track (`va-future-audio.mp3`).
+   - Works **100% offline** and on any local dev server (`Live Server 127.0.0.1:5000`, `python3 -m http.server`, or `uvicorn` on port `8080`).
+2. **Real Live-Action Internet Films ([W3C Web Accessibility Initiative](https://media.w3.org/wai/perspective-videos/)):**
+   - Switch directly in the player's stream selector to real live-action films (`video-captions.mp4`, `keyboard-compatibility.mp4`, `text-to-speech.mp4`, `voice-recognition.mp4`) with their original live-action soundtrack and matched bilingual English/Amharic WebVTT files (`w3c-captions-en/am.vtt`, `w3c-keyboard-en/am.vtt`, `w3c-speech-en/am.vtt`).
+3. **YouTube Live Stream (`https://www.youtube.com/watch?v=GZFoexLsMi8`):**
+   - Selecting `📺 YouTube Live Embed` loads the YouTube stream with `kimi-3d-en.vtt` and `kimi-3d-am.vtt` captions, while automatically falling back to the local studio MP4 if offline.
+
+---
+
+## 3. Chrome Screen Reader Extensions, NVDA & Android TalkBack Guide
+PlayLy is engineered specifically for blind learners testing via **Chrome Screen Reader extensions**, **NVDA**, or **Android TalkBack**:
+- **Zero Focus Traps:** Any embedded iframe uses `tabindex="-1"` and `aria-hidden="true"` so screen readers and TalkBack right/left swipes never get stuck inside third-party frames.
+- **Native ARIA Menu Semantics:** Both floating dark glass menus (`⚙️ Settings` and `⋮ Context Menu`) use `role="menu"`, `role="menuitem"`, and `role="menuitemcheckbox"` with live `aria-checked="true/false"` states (`Stable Volume`, `Voice boost`, `Ambient mode`, `Loop`).
+- **Live Scrubber `aria-valuetext`:** As a blind learner adjusts the red timeline slider (`Left`/`Right` arrows or `J`/`L`), the slider updates `aria-valuetext="0:14 of 0:39"` and emits a directional spatial Web Audio earcon.
+- **Blind+ Hotkeys & Voice Copilot:**
+  - Press **`B`** (or tap the bottom-right pill switch) to toggle **Blind+ Auto-Voice Mode** with Web Audio spatial earcons.
+  - Press **`I`** at any timestamp to pause playback and hear a complete **Visual Scene & Sign Breakdown** of the current frame.
+  - Press **`1`–`8`** for instant **DAISY Chapter Hopping**, or **`[` / `]`** to hop sentence-by-sentence.
+  - Press **`V`** to activate the **Hands-Free Voice Command Copilot** (or test with the 1-click Voice Simulator buttons in the Blind Console tab).
+
+---
+
+## 4. Run It (Docker, FastAPI, or VS Code Live Server)
+
+### Option A: FastAPI Full Stack (Recommended — includes Level 2 REST API & Swagger UI)
 ```bash
 pip install -r api/requirements.txt
 uvicorn api.app.main:app --host 0.0.0.0 --port 8080
 ```
-Then open these addresses in your browser:
-- **Inside Savanna Host (Lesson + YouTube CC + Live EthSL + Blind+ Console):** `http://localhost:8080/savanna/pages/concept-with-navigation.html`
+### Option B: Docker Compose
+```bash
+docker compose up --build
+```
+### Option C: VS Code Live Server / Static HTTP Server
+Because `module/db-player.js` resolves asset paths dynamically relative to the script location, you can also open the repository folder directly in **VS Code Live Server (`http://127.0.0.1:5000/savanna/pages/concept-with-navigation.html`)** or run `python3 -m http.server 8000`.
+
+### Key Pages to Open
+- **Inside Savanna Host (`<db-player>`):** `http://localhost:8080/savanna/pages/concept-with-navigation.html`
 - **Outside Savanna Proof (`demo/blank.html`, zero Bootstrap/Savanna CSS):** `http://localhost:8080/demo/blank.html`
 - **Accessible Career Gateway (`<db-job-card>`):** `http://localhost:8080/savanna/pages/jobs.html`
-- **Admin Dual-Video Upload Studio (`admin-upload.html`):** `http://localhost:8080/savanna/pages/admin-upload.html` (or `/admin`)
-- **Recorded Live Session Viewer (`<db-live-viewer>`, Extra Credit):** `http://localhost:8080/savanna/pages/live-session-viewer.html`
+- **Admin Dual-Video Upload Studio:** `http://localhost:8080/savanna/pages/admin-upload.html`
+- **Recorded Live Session Viewer (`<db-live-viewer>`):** `http://localhost:8080/savanna/pages/live-session-viewer.html`
 - **Accessible Lesson HTML & Tagged PDF:** `http://localhost:8080/documents/lesson-document.html` and `http://localhost:8080/documents/lesson-document.pdf`
 - **Interactive Swagger API Docs (Level 2):** `http://localhost:8080/docs`
 
-## Install, Level 1
-Drop these two lines into any HTML page (CMS, Moodle, Canvas, or Savanna):
+---
+
+## 5. Install (Level 1, Level 2 REST API & Level 3 Open Standards)
+
+### Level 1: One Script Tag + Custom Element
 ```html
-<!-- 1. Load the single plugin script -->
 <script src="/module/db-player.js" defer></script>
 
-<!-- 2. Place the accessible player component -->
 <db-player
-  title="The Future of the VA Industry"
-  src="/savanna/assets/media/va-future-lesson.mp4"
+  title="Build 3D Websites with Kimi Code - Tutorial #4"
+  src="/savanna/assets/media/kimi-3d-ceramics.mp4"
   captions="/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
   sign="/savanna/assets/media/va-future-ethsl.mp4"
   describe="/savanna/assets/captions/va-future-ad-en.vtt,/savanna/assets/captions/va-future-ad-am.vtt"
   api="/api/v1"
   lesson-id="va-future"
-  offline-worker="/service-worker.js"
-  lang="am">
+  lang="en">
 </db-player>
 
-<!-- 3. Place the career gateway job card component -->
-<db-job-card api="/api/v1" job-id="accessible-va" lang="am"></db-job-card>
+<db-job-card api="/api/v1" job-id="accessible-va" lang="en"></db-job-card>
 ```
-### Supported Attributes & CustomEvents
-- **`<db-player>` attributes:** `src`, `captions` (comma-separated VTT URLs), `sign` (EthSL video URL), `describe` (audio description VTT URLs), `lang` (`"en"` or `"am"`), `api` (`/api/v1`), `lesson-id`, `offline-worker`, `title`.
-- **`<db-job-card>` attributes:** `api`, `job-id`, `lang` (`"en"` or `"am"`).
-- **`<db-live-viewer>` attributes:** `src`, `captions`, `lang`, `title`.
-- **Dispatched Host Events (`bubbles: true, composed: true`):**
-  - `db-player:progress` -> `{ seconds, percent }`
-  - `db-player:complete` -> `{ lessonId }`
-  - `db-player:prefs` -> `{ captionSize, captionColor, captionBackground, captionPosition, captionDual, signPosition, signSize, signMode, blindOvercooked, dataSaver3G, language }`
-  - `db-job-card:accommodation-requested` -> `{ jobId, accommodations, language }`
 
-## Install, Level 2
-The machine-readable OpenAPI 3.1.0 specification is at [`openapi.yaml`](openapi.yaml) and interactive Swagger UI is served at `http://localhost:8080/docs`. Paste any of these `curl` commands to test every endpoint:
-
+### Level 2: REST API (`openapi.yaml` & `/docs`)
 ```bash
-# 1. Get lesson metadata and media track URLs
+# 1. Get lesson metadata & tracks
 curl -s http://localhost:8080/api/v1/lessons/va-future
 
-# 2. Get parsed Amharic transcript cues with timestamps
+# 2. Get parsed bilingual transcript cues
 curl -s "http://localhost:8080/api/v1/lessons/va-future/transcript?lang=am"
 
-# 3. Translate live speech/captions into Ethiopian Sign Language (EthSL) SOV Gloss & Handshapes
+# 3. Translate text/captions into Ethiopian Sign Language (EthSL) SOV Gloss & Handshapes
 curl -s -X POST http://localhost:8080/api/v1/sign/translate \
   -H "Content-Type: application/json" \
-  -d '{"text":"Welcome to the future of Virtual Assistant work in Ethiopia","language":"en"}'
+  -d '{"text":"Captions let Deaf and hard-of-hearing learners follow every word.","language":"en"}'
 
-# 4. Get the built-in Ethiopian Sign Language (EthSL) technical lexicon
-curl -s http://localhost:8080/api/v1/sign/dictionary
-
-# 5. Download the 3G offline ZIP pack (<300 KB: MP3 audio + bilingual HTML + VTT + .brf Braille)
+# 4. Download the <300 KB 3G Offline ZIP Pack (MP3 audio + bilingual HTML + VTT + .brf Braille)
 curl -s -O -J http://localhost:8080/api/v1/lessons/va-future/offline-pack
 
-# 6. Upload a corrected WebVTT caption file
-curl -s -X POST http://localhost:8080/api/v1/lessons/va-future/captions \
-  -F 'metadata={"lesson_id":"va-future","language":"am","reviewer":"Kidus","notes":"Fixed Amharic loanwords"}' \
-  -F "caption_file=@savanna/assets/captions/va-future-am.vtt"
-
-# 7. Get accessible job listing in Amharic
-curl -s "http://localhost:8080/api/v1/jobs/accessible-va?lang=am"
-
-# 8. Submit a private interview accommodation request
-curl -s -X POST http://localhost:8080/api/v1/jobs/accessible-va/accommodations \
-  -H "Content-Type: application/json" \
-  -d '{"accommodations":["ethsl_interpreter","extra_time"],"language":"am"}'
-
-# 9. Verify Open Badges 3.0 credential (valid vs. tampered signature)
+# 5. Verify Open Badges 3.0 cryptographic credential
 curl -s http://localhost:8080/api/v1/certificates/va-2026-001
-curl -s "http://localhost:8080/api/v1/certificates/va-2026-001?sig=tampered_invalid_signature"
-
-# 10. Register a host webhook for lesson/caption/accommodation events
-curl -s -X POST http://localhost:8080/api/v1/webhooks \
-  -H "Content-Type: application/json" \
-  -d '{"url":"http://localhost:9000/webhook","events":["lesson.completed","captions.updated","job.accommodation_requested"]}'
 ```
 
-## Install, Level 3
-1. **`schema.org/JobPosting` (JSON-LD):** `<db-job-card>` automatically injects a standard `<script type="application/ld+json">` `JobPosting` block into the host page `<head>` so any search engine or partner Ethiopian job board can index the role and its workplace accommodations with zero custom work.
-2. **Open Badges 3.0 / W3C Verifiable Credentials:** Certificates (`/api/v1/certificates/{id}` and `/certificates/{id}`) follow the Open Badges 3.0 JSON-LD schema signed with HMAC-SHA256 (`DataIntegrityProof`). Opening `/certificates/va-2026-001` verifies the cryptographic signature and displays `"valid"`, while `/certificates/va-2026-001?sig=tampered_invalid_signature` demonstrates tamper detection (`"not valid"`).
-3. **Grade 1 Braille ASCII (`.brf`) + Interactive 6-Dot Tactile Cell Inspector:** Client-side and server-side export to 38-cell Grade 1 Braille with embosser form-feed characters (`\f`) for Focus 40 / Braille Sense refreshable displays, plus an interactive on-screen 6-dot tactile matrix that reads raised dot numbers aloud.
+---
 
-## Languages
-English (`en`) and Amharic (`am`) are 100% complete across all buttons, labels, dialogs, transcripts, audio descriptions, and job cards, plus a **Dual Bilingual (`EN + አማ`)** subtitle mode that stacks both languages simultaneously. All UI strings live in `module/i18n/en.json` and `module/i18n/am.json`.
-- **How to add a new language (e.g., Afaan Oromo `om`, Tigrinya `ti`, Somali `so`, or Arabic `ar`):** Add one JSON file (`module/i18n/om.json`) copying the keys of `en.json` and pass `lang="om"` on the component tag. CSS logical properties (`padding-inline-start`, `margin-inline-end`, `text-align: start`) are used throughout so RTL scripts (`ar`) flow right-to-left automatically.
-
-## Offline and slow connection
-- **Ethiopia 3G Smart Data-Saver Mode (In-Player):** One-click toggle switches from heavy MP4 video streaming (`1.12 MB`) to synchronized slide keyframes + MP3 audio (`0.23 MB`), saving **80% of mobile data** while preserving full captions, audio descriptions, and the Live Real-Time EthSL Signer.
-- **What stays out of the 3G offline ZIP pack:** The heavy `.mp4` video stream is excluded from `/api/v1/lessons/{id}/offline-pack`. Instead, the offline ZIP pack (`~255 KB` total) bundles the low-bitrate MP3 audio (`233 KB`), English and Amharic WebVTT captions, plain-text transcripts, Grade 1 Braille (`.brf`), and a self-contained bilingual `lesson-offline.html` player.
-- **Measured size & load time on Slow 3G (Chrome DevTools throttling):**
-  - `module/db-player.js`: **~48 KB** uncompressed (~11 KB gzipped), zero external JS dependencies.
-  - `demo/blank.html` initial interactive load on Slow 3G (400 kbps, 400ms RTT): **~1.1 seconds** (video set to `preload="metadata"` so zero video bytes download until the learner presses Play).
-
-## Data and privacy
-- **Minimum collection & local-first storage:** Caption size, color, background, dual-language toggle, bookmarks, and sign-window position preferences are stored only in the learner's browser (`localStorage` key `db-player-preferences`).
-- **Private accommodation requests:** Interview accommodation selections on `<db-job-card>` require no medical proof or diagnosis and are sent over a dedicated endpoint (`POST /api/v1/jobs/{id}/accommodations`) separate from learner profile data.
-- **No third-party data leaks:** Zero external analytics, zero external font/CDN calls, and zero cloud AI API keys in the browser.
-
-## Cost to run
-- **Monthly cost for 3,000 learners: $0 to ~$5 / month.**
-- Because `<db-player>` uses native browser `speechSynthesis` / `SpeechRecognition`, client-side Web Audio API earcons, deterministic EthSL SOV linguistic gloss rules, and batch open-source `faster-whisper` (`int8` on CPU) rather than paid cloud APIs, per-learner API cost is **$0.00**.
-
-## Finished and not finished
-- **Finished (100% Working):**
-  - **Dual-Engine EthSL Sign Language Window:** Combines **Live Real-Time Speech/Caption/Text-to-EthSL SOV Gloss + 60 FPS 21-Point Hand/Body Kinematic Signer** AND **Synchronized Prerecorded Video PiP (`va-future-ethsl.mp4`)** in a freely draggable, resizable, dockable, 50/50 split-screen, and on/off-able frame.
-  - **YouTube-Grade Captions & Player UX:** Chapter-segmented timeline scrubber with hover previews, `[CC]` active indicator, 1-click `EN+አማ` dual bilingual subtitles, word-by-word karaoke highlighting, click-any-word EthSL sign inspector popover, and a YouTube-style `⚙️ Settings` popover with 1-click high-contrast presets.
-  - **"Over-Cooked" Blind Audio & Braille Console:** Spatial Web Audio earcons, Hands-Free Voice Command Copilot (`V`), Instant Visual Scene Inspector (`I`), DAISY Chapter/Sentence Hopping (`1–6`, `[`, `]`), Timestamped Audio Bookmarks (`N`), Host-Page Section Reader (`R`), Interactive 6-Dot Tactile Braille Cell Inspector, and Grade 1 `.brf` export.
-  - **Creative Track 2 Exclusives:** Deaf Sensory Audio & Haptic Rhythm Radar (`navigator.vibrate`) + 3G Smart Data-Saver Mode (80% bandwidth reduction).
-  - **Career Gateway (`<db-job-card>`) & Live Session Viewer (`<db-live-viewer>`):** 200% zoom reflow, spoken audio summary, private accommodation requests, `schema.org/JobPosting` JSON-LD, and Open Badges 3.0 cryptographic verification (`valid` and `not_valid` states).
-- **Honest Limitations:**
-  - Raw `faster-whisper` (`base` model) speech recognition achieves ~6% Word Error Rate (WER) on English audio but ~34% WER on unedited Amharic technical audio; human review via our built-in Caption Pipeline Editor is required before publishing Amharic captions.
-  - Browser `speechSynthesis` Amharic voice availability depends on the operating system; when an Android device lacks a native `am-ET` TTS voice, learners can play the bundled recorded audio track (`va-future-audio.mp3`) or read the high-contrast Amharic captions/transcript.
-
-## Libraries and their licences
-- **Frontend (`module/db-player.js`):** Zero external libraries (100% vanilla ES2022 Web Components, Canvas 2D, and Web Audio API, MIT/Open Licence).
-- **Backend (`api/`):** FastAPI (MIT), Uvicorn (BSD-3-Clause), Pydantic (MIT), PyYAML (MIT), python-multipart (Apache-2.0).
-- **Offline Transcript CLI (`transcript-pipeline/`):** `faster-whisper` (MIT).
+## 6. Complete Repository File Structure (All Files Included in ZIP)
+```text
+PlayLy-main/
+├── README.md                                  # Complete documentation, setup, and curl examples
+├── CONFORMANCE.md                             # WCAG 2.2 Level AA criterion-by-criterion audit
+├── docker-compose.yml                         # One-command container orchestration
+├── openapi.yaml                               # OpenAPI 3.1.0 machine-readable specification
+├── service-worker.js                          # Offline caching service worker for Aeroplane Mode
+├── module/
+│   ├── db-player.js                           # Zero-dependency Web Components (<db-player>, <db-job-card>, <db-live-viewer>)
+│   ├── service-worker.js                      # Module-scoped service worker
+│   └── i18n/
+│       ├── en.json                            # Complete English UI dictionary
+│       └── am.json                            # Complete Amharic (አማርኛ) UI dictionary
+├── api/
+│   ├── Dockerfile                             # FastAPI backend container definition
+│   ├── requirements.txt                       # Python dependencies
+│   ├── data/
+│   │   └── lessons.json                       # Local & W3C/YouTube internet lesson catalog
+│   └── app/
+│       ├── main.py                            # FastAPI entrypoint & static mounts
+│       ├── models.py                          # Domain models
+│       ├── core/config.py                     # Paths & environment settings
+│       ├── routers/                           # Modular routers (lessons, sign, jobs, certificates, webhooks)
+│       ├── schemas/                           # Pydantic validation schemas
+│       └── services/                          # Business logic (lessons, sign_translator, jobs, certificates, webhooks)
+├── demo/
+│   ├── blank.html                             # External host proof (zero Bootstrap / zero Savanna CSS)
+│   └── data/jobs.json                         # Test career gateway listings
+├── documents/
+│   ├── lesson-document.html                   # Accessible semantic HTML lesson with full image descriptions
+│   └── lesson-document.pdf                    # 3-page tagged PDF lesson document
+├── savanna/
+│   ├── index.html                             # Savanna static host index
+│   ├── pages/
+│   │   ├── concept-with-navigation.html       # Main Savanna lesson page with <db-player> mounted
+│   │   ├── admin-upload.html                  # Admin Dual-Video Upload & Sync Studio
+│   │   ├── jobs.html                          # Accessible Career Gateway page
+│   │   ├── live-session-viewer.html           # Recorded Live Session + Synchronized Chat Log Viewer
+│   │   ├── homepage-v1-paced.html             # Savanna learner dashboard (paced)
+│   │   └── homepage-v1-self-paced.html        # Savanna learner dashboard (self-paced)
+│   └── assets/
+│       ├── media/
+│       │   ├── kimi-3d-ceramics.mp4           # Photorealistic studio MP4 (100% synced to audio & captions)
+│       │   ├── va-future-lesson.mp4           # Synchronized lesson MP4
+│       │   ├── va-future-ethsl.mp4            # Synchronized Ethiopian Sign Language (EthSL) MP4
+│       │   └── va-future-audio.mp3            # Low-bitrate 3G audio track
+│       ├── captions/
+│       │   ├── va-future-en.vtt               # Audio-locked English WebVTT captions
+│       │   ├── va-future-am.vtt               # Audio-locked Amharic WebVTT captions
+│       │   ├── w3c-captions-en.vtt            # W3C Video Captions film English VTT
+│       │   ├── w3c-captions-am.vtt            # W3C Video Captions film Amharic VTT
+│       │   ├── w3c-keyboard-en.vtt            # W3C Keyboard Compatibility English VTT
+│       │   ├── w3c-keyboard-am.vtt            # W3C Keyboard Compatibility Amharic VTT
+│       │   ├── w3c-speech-en.vtt              # W3C Text-to-Speech English VTT
+│       │   ├── w3c-speech-am.vtt              # W3C Text-to-Speech Amharic VTT
+│       │   ├── kimi-3d-en.vtt                 # YouTube GZFoexLsMi8 English VTT
+│       │   ├── kimi-3d-am.vtt                 # YouTube GZFoexLsMi8 Amharic VTT
+│       │   ├── va-future-ad-en.vtt            # English Audio Description VTT
+│       │   ├── va-future-ad-am.vtt            # Amharic Audio Description VTT
+│       │   └── session-20261112-wcag.vtt      # Live Session WCAG training VTT
+│       ├── css/                               # Original Savanna stylesheets (untouched)
+│       ├── js/                                # Original Savanna scripts (untouched)
+│       ├── img/                               # Original Savanna images
+│       └── fonts/                             # Original Savanna fonts
+├── transcript-pipeline/
+│   ├── generate_transcript.py                 # Open-source faster-whisper CLI caption generator
+│   └── README.md                              # Caption pipeline & WER documentation
+└── tests/
+    └── test_plugin_and_api.py                 # Automated test suite (10 unit tests)
+```

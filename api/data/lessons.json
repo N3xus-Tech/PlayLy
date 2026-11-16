@@ -1,9 +1,9 @@
 {
   "yt-3d-ceramics": {
     "id": "yt-3d-ceramics",
-    "title": "Build 3D Websites with Kimi Code - Tutorial #4 (YouTube)",
-    "video": "https://www.youtube.com/watch?v=GZFoexLsMi8",
-    "fallback_video": "/savanna/assets/media/va-future-lesson.mp4",
+    "title": "Build 3D Websites with Kimi Code - Tutorial #4",
+    "video": "/savanna/assets/media/kimi-3d-ceramics.mp4",
+    "youtube_url": "https://www.youtube.com/watch?v=GZFoexLsMi8",
     "sign": "/savanna/assets/media/va-future-ethsl.mp4",
     "audio": "/savanna/assets/media/va-future-audio.mp3",
     "captions": {

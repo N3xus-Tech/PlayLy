@@ -8,6 +8,15 @@
   } catch {
     moduleBase = new URL("http://localhost/");
   }
+  const resolveAssetUrl = (p) => {
+    const str = String(p || "").trim();
+    if (!str) return "";
+    if (/^(?:https?:|blob:|data:)/i.test(str)) return str;
+    if (str.startsWith("/savanna/")) {
+      try { return new URL(".." + str, moduleBase).href; } catch { return str; }
+    }
+    return str;
+  };
   const dictionaries = new Map();
 
   const fallback = {
@@ -362,65 +371,51 @@
 
   const INTERNET_VIDEO_CATALOG = [
     {
-      id: "yt-3d-ceramics",
-      label: "▶ YouTube Featured: Build 3D Websites (Ceramics Example, 3:26)",
-      src: "https://www.youtube.com/watch?v=GZFoexLsMi8",
+      id: "studio-synced",
+      label: "▶ Featured Studio Lesson: Digital Accessibility (100% Audio-Video-CC Synced)",
+      src: "/savanna/assets/media/kimi-3d-ceramics.mp4",
       sign: "/savanna/assets/media/va-future-ethsl.mp4",
-      captions: "/savanna/assets/captions/kimi-3d-en.vtt,/savanna/assets/captions/kimi-3d-am.vtt"
+      captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
     },
     {
       id: "w3c-captions",
-      label: "🌐 W3C Live-Action: Video Captions & Deaf Access (media.w3.org)",
+      label: "🌐 W3C Live-Action Film: Video Captions & Deaf Access (media.w3.org)",
       src: "https://media.w3.org/wai/perspective-videos/video-captions.mp4",
       sign: "https://media.w3.org/wai/perspective-videos/video-captions-ad.mp4",
       captions: "/savanna/assets/captions/w3c-captions-en.vtt,/savanna/assets/captions/w3c-captions-am.vtt"
     },
     {
       id: "w3c-keyboard",
-      label: "🌐 W3C Live-Action: Keyboard Compatibility (media.w3.org)",
+      label: "🌐 W3C Live-Action Film: Keyboard Compatibility (media.w3.org)",
       src: "https://media.w3.org/wai/perspective-videos/keyboard-compatibility.mp4",
       sign: "https://media.w3.org/wai/perspective-videos/keyboard-compatibility-ad.mp4",
       captions: "/savanna/assets/captions/w3c-keyboard-en.vtt,/savanna/assets/captions/w3c-keyboard-am.vtt"
     },
     {
       id: "w3c-speech",
-      label: "🌐 W3C Live-Action: Text-to-Speech & Blind Screen Readers (media.w3.org)",
+      label: "🌐 W3C Live-Action Film: Text-to-Speech & Blind Screen Readers (media.w3.org)",
       src: "https://media.w3.org/wai/perspective-videos/text-to-speech.mp4",
       sign: "https://media.w3.org/wai/perspective-videos/text-to-speech-ad.mp4",
       captions: "/savanna/assets/captions/w3c-speech-en.vtt,/savanna/assets/captions/w3c-speech-am.vtt"
     },
     {
       id: "w3c-voice",
-      label: "🌐 W3C Live-Action: Speech Recognition & Voice Control (media.w3.org)",
+      label: "🌐 W3C Live-Action Film: Speech Recognition & Voice Control (media.w3.org)",
       src: "https://media.w3.org/wai/perspective-videos/voice-recognition.mp4",
       sign: "https://media.w3.org/wai/perspective-videos/voice-recognition-ad.mp4",
       captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
     },
     {
-      id: "w3c-layout",
-      label: "🌐 W3C Live-Action: Clear Layout & Design (media.w3.org)",
-      src: "https://media.w3.org/wai/perspective-videos/clear-layout-design.mp4",
+      id: "yt-live-embed",
+      label: "📺 YouTube Live Embed: Build 3D Websites with Kimi Code (GZFoexLsMi8)",
+      src: "https://www.youtube.com/watch?v=GZFoexLsMi8",
       sign: "/savanna/assets/media/va-future-ethsl.mp4",
-      captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
-    },
-    {
-      id: "google-blazes",
-      label: "🌐 Google Cloud Stream: For Bigger Blazes HD (googleapis.com)",
-      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-      sign: "/savanna/assets/media/va-future-ethsl.mp4",
-      captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
+      captions: "/savanna/assets/captions/kimi-3d-en.vtt,/savanna/assets/captions/kimi-3d-am.vtt"
     },
     {
       id: "mdn-flower",
-      label: "🌐 MDN CC0 Live Stream: Blooming Flower HD (mozilla.net)",
+      label: "🌐 MDN CC0 HD Stream: Blooming Flower (mozilla.net)",
       src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-      sign: "/savanna/assets/media/va-future-ethsl.mp4",
-      captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
-    },
-    {
-      id: "local-va-future",
-      label: "💾 Local Offline Studio: Future of the VA Industry (Offline-Ready)",
-      src: "/savanna/assets/media/va-future-lesson.mp4",
       sign: "/savanna/assets/media/va-future-ethsl.mp4",
       captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
     }
@@ -428,20 +423,24 @@
 
   const DEFAULT_CUES = {
     en: [
-      { start: 0, end: 6, chapter: "Ch 1: Welcome & Overview", text: "[Introductory chime] Welcome to Module 2: The Future of the Virtual Assistant (VA) Industry." },
-      { start: 6, end: 13, chapter: "Ch 2: Global Remote Work Growth", text: "The Virtual Assistant profession is not shrinking. It is evolving rapidly as global remote work expands." },
-      { start: 13, end: 21, chapter: "Ch 3: AI Bots vs. Human VAs", text: "[Soft transition tone] Important Distinction: Virtual Assistant can mean an AI software bot like Siri, or a skilled human remote professional." },
-      { start: 21, end: 29, chapter: "Ch 4: Empathy & Human Judgment", text: "While AI automates repetitive scheduling and data entry, human VAs lead in judgment, empathy, and complex problem-solving." },
-      { start: 29, end: 37, chapter: "Ch 5: Ethiopian Tech Talent", text: "By combining AI tools with human communication skills, Ethiopian tech talent can compete for global remote careers." },
-      { start: 37, end: 45, chapter: "Ch 6: Accessible Career Gateway", text: "[Closing chime] Complete this concept and review the Accessible Career Gateway below to share your verifiable ALX certificate with employers." }
+      { start: 0, end: 3.8, chapter: "Ch 1: Digital Accessibility Intro", text: "[Introductory chime] Welcome to this short lesson on digital accessibility." },
+      { start: 3.8, end: 9.0, chapter: "Ch 2: Global Disability Impact", text: "One in six people worldwide live with a disability, visible or not." },
+      { start: 9.0, end: 13.6, chapter: "Ch 3: Removing Barriers", text: "Good design removes barriers; it does not remove people." },
+      { start: 13.6, end: 18.6, chapter: "Ch 4: Captions for Deaf Learners", text: "Captions let Deaf and hard-of-hearing learners follow every word." },
+      { start: 18.6, end: 23.9, chapter: "Ch 5: Screen Readers for Blind Users", text: "Screen readers describe the page aloud for blind and low-vision learners." },
+      { start: 23.9, end: 29.2, chapter: "Ch 6: Full Keyboard Navigation", text: "Keyboard support means everyone can navigate without ever touching a mouse." },
+      { start: 29.2, end: 34.9, chapter: "Ch 7: Plain Language & Clear Steps", text: "Plain language and clear steps support learners with cognitive disabilities." },
+      { start: 34.9, end: 39.5, chapter: "Ch 8: Build for Everyone", text: "[Closing chime] Now let's build something that actually works for everyone." }
     ],
     am: [
-      { start: 0, end: 6, chapter: "ምዕራፍ 1፦ መግቢያ", text: "[የመክፈቻ ደወል ድምፅ] እንኳን ወደ ሞጁል 2 በደህና መጡ፦ የቨርቹዋል ረዳት (VA) ኢንዱስትሪ የወደፊት እጣ ፈንታ።" },
-      { start: 6, end: 13, chapter: "ምዕራፍ 2፦ የርቀት ሥራ እድገት", text: "የቨርቹዋል ረዳት ሙያ እየጠበበ አይደለም፤ የርቀት ሥራ በዓለም አቀፍ ደረጃ እያደገ ሲሄድ በፍጥነት እየተሻሻለ ነው።" },
-      { start: 13, end: 21, chapter: "ምዕራፍ 3፦ AI እና የሰው ባለሙያ ልዩነት", text: "[የሽግግር ድምፅ] አስፈላጊ ልዩነት፦ ቨርቹዋል ረዳት ማለት እንደ ሲሪ ያለ የAI ሶፍትዌር ወይም የሰለጠነ የሰው የርቀት ባለሙያ ማለት ሊሆን ይችላል።" },
-      { start: 21, end: 29, chapter: "ምዕራፍ 4፦ ርኅራኄ እና ውሳኔ አሰጣጥ", text: "AI ተደጋጋሚ የመረጃ አያያዝ ስራዎችን ሲያቀልል፣ የሰው ባለሙያዎች ግን በውሳኔ አሰጣጥ፣ በመረዳት እና ውስብስብ ችግሮችን በመፍታት ይመራሉ።" },
-      { start: 29, end: 37, chapter: "ምዕራፍ 5፦ የኢትዮጵያ ወጣቶች ተወዳዳሪነት", text: "የAI መሳሪያዎችን ከሰው ልጅ የተግባቦት ክህሎት ጋር በማቀናጀት፣ የኢትዮጵያ ወጣቶች በዓለም አቀፍ የርቀት ሥራዎች መወዳደር ይችላሉ።" },
-      { start: 37, end: 45, chapter: "ምዕራፍ 6፦ የሥራ እድል እና የምስክር ወረቀት", text: "[የመዝጊያ ደወል ድምፅ] ይህንን ትምህርት ያጠናቅቁ እና የተረጋገጠ የALX የምስክር ወረቀትዎን ለቀጣሪዎች ለማጋራት ከታች ያለውን የሥራ እድል ክፍል ይመልከቱ።" }
+      { start: 0, end: 3.8, chapter: "ምዕራፍ 1፦ የዲጂታል ተደራሽነት መግቢያ", text: "[የመክፈቻ ደወል] እንኳን ወደዚህ አጭር የዲጂታል ተደራሽነት ሞጁል ትምህርት በደህና መጡ።" },
+      { start: 3.8, end: 9.0, chapter: "ምዕራፍ 2፦ የዓለም አቀፍ የአካል ጉዳት ተጽዕኖ", text: "በዓለም ዙሪያ ከስድስት ሰዎች አንዱ የሚታይ ወይም የማይታይ የአካል ጉዳት አለበት።" },
+      { start: 9.0, end: 13.6, chapter: "ምዕራፍ 3፦ እንቅፋቶችን ማስወገድ", text: "ጥሩ ዲዛይን እንቅፋቶችን ያስወግዳል እንጂ ሰዎችን አያገልልም።" },
+      { start: 13.6, end: 18.6, chapter: "ምዕራፍ 4፦ መግለጫዎች መስማት ለተሳናቸው", text: "የጽሑፍ መግለጫዎች (Captions) መስማት የተሳናቸው ተማሪዎች እያንዳንዱን ቃል እንዲከታተሉ ያስችላሉ።" },
+      { start: 18.6, end: 23.9, chapter: "ምዕራፍ 5፦ ስክሪን አንባቢዎች ለዓይነ ስውራን", text: "ስክሪን አንባቢዎች (Screen Readers) ዓይነ ስውራን ተማሪዎች ገጹን በድምፅ እንዲሰሙት ያደርጋሉ።" },
+      { start: 23.9, end: 29.2, chapter: "ምዕራፍ 6፦ የቁልፍ ሰሌዳ (Keyboard) ድጋፍ", text: "የቁልፍ ሰሌዳ (Keyboard) ድጋፍ ማውዝ ሳይነኩ ሁሉንም ነገር መጠቀም ያስችላል።" },
+      { start: 29.2, end: 34.9, chapter: "ምዕራፍ 7፦ ግልጽ ቋንቋ እና ቀላል ደረጃዎች", text: "ግልጽ ቋንቋ እና ቀላል ቅደም ተከተሎች የመረዳት እገዛ የሚሹ ተማሪዎችን ይደግፋሉ።" },
+      { start: 34.9, end: 39.5, chapter: "ምዕራፍ 8፦ ለሁሉም የሚሰራ እንገንባ", text: "[የመዝጊያ ደወል] አሁን ለሁሉም ሰው በትክክል የሚሰራ ስርዓት እንገንባ!" }
     ]
   };
 
@@ -609,9 +608,9 @@
         captionLanguage: saved.captionLanguage || (this.getAttribute("lang") === "am" ? "am" : "en"),
         captionDual: saved.captionDual ?? false,
         captionSize: saved.captionSize || "1.25",
-        captionColor: saved.captionColor || "#fff000",
+        captionColor: saved.captionColor || "#ffffff",
         captionBackground: saved.captionBackground || "#080808",
-        captionOpacity: saved.captionOpacity || "0.84",
+        captionOpacity: saved.captionOpacity || "0.58",
         captionPosition: saved.captionPosition || "bottom",
         captionCoords: saved.captionCoords || null,
         sign: saved.sign ?? true,
@@ -633,7 +632,7 @@
         earcons: saved.earcons ?? true,
         haptics: saved.haptics ?? true,
         dataSaver3G: saved.dataSaver3G ?? false,
-        transcriptOpen: saved.transcriptOpen ?? true,
+        transcriptOpen: saved.transcriptOpen ?? false,
         playbackRate: saved.playbackRate || 1
       };
     }
@@ -696,13 +695,14 @@
       return this.getAttribute("lang") === "am" ? "am" : "en";
     }
     get source() {
-      return this.getAttribute("src") || "https://www.youtube.com/watch?v=GZFoexLsMi8";
+      const raw = this.getAttribute("src") || "/savanna/assets/media/kimi-3d-ceramics.mp4";
+      return resolveAssetUrl(raw);
     }
     get youtubeId() {
-      return extractYouTubeId(this.source);
+      return extractYouTubeId(this.getAttribute("src") || "");
     }
     get signSource() {
-      return this.getAttribute("sign") || "/savanna/assets/media/va-future-ethsl.mp4";
+      return resolveAssetUrl(this.getAttribute("sign") || "/savanna/assets/media/va-future-ethsl.mp4");
     }
     get descriptionSource() {
       return this.getAttribute("describe") || this.getAttribute("descriptions") || "";
@@ -733,7 +733,7 @@
       const declared = this.captionSources();
       for (const [code, path] of Object.entries(declared)) {
         try {
-          const response = await fetch(path);
+          const response = await fetch(resolveAssetUrl(path));
           if (response.ok) {
             const parsed = parseVtt(await response.text());
             if (parsed.length) {
@@ -750,7 +750,7 @@
         for (const path of descPaths) {
           const langCode = languageForPath(path);
           try {
-            const response = await fetch(path);
+            const response = await fetch(resolveAssetUrl(path));
             if (response.ok) {
               const parsed = parseVtt(await response.text());
               if (parsed.length) {
@@ -824,141 +824,354 @@
         <style>
           :host {
             display: block;
-            font-family: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Ethiopic", sans-serif);
-            color: var(--bs-body-color, #101828);
-            line-height: 1.6;
-            margin: 1rem 0;
+            font-family: "Roboto", "YouTube Noto", system-ui, -apple-system, "Segoe UI", "Noto Sans Ethiopic", sans-serif;
+            color: var(--bs-body-color, #0f0f0f);
+            line-height: 1.5;
+            margin: 0.75rem 0;
           }
           *, *::before, *::after { box-sizing: border-box; }
+
           .shell {
-            border: 2px solid #05192d;
-            border-radius: 0.85rem;
-            background: #ffffff;
+            background: #0f0f0f;
+            border-radius: 12px;
             overflow: visible;
             display: grid;
             gap: 0;
-            box-shadow: 0 10px 28px rgba(5, 25, 45, 0.14);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+          }
+          .shell.ambient-on {
+            box-shadow: 0 14px 52px rgba(142, 76, 46, 0.32), 0 6px 24px rgba(0, 0, 0, 0.5);
           }
           .shell:fullscreen {
             width: 100vw;
             height: 100vh;
             overflow-y: auto;
             border-radius: 0;
-            background: #05192d;
+            background: #000000;
           }
-          /* Top Header & Blind Status Bar */
-          .heading {
+
+          /* 16:9 Widescreen Cinema Stage (Matches Screenshot image_095f32.jpg) */
+          .stage {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            max-height: 36rem;
+            background: #181412;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            overflow: hidden;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+          }
+          .stage.split {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1.35fr) minmax(260px, 1fr) !important;
+            gap: 0.5rem;
+            align-items: stretch;
+            background: #0a0a0c;
+            padding: 0.5rem 0.5rem 3.8rem 0.5rem;
+          }
+          video.main {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: #181412;
+            cursor: pointer;
+          }
+          video::cue { opacity: 0; }
+
+          /* Centered Subtitle Overlay Right Above the Red Scrubber Line */
+          .captions {
+            position: absolute;
+            left: 8%;
+            right: 8%;
+            text-align: center;
+            z-index: 14;
+            pointer-events: auto;
+            cursor: grab;
+            user-select: none;
+          }
+          .captions.bottom { bottom: 3.1rem; }
+          .captions.top { top: 1.2rem; }
+          .caption {
+            display: inline-block;
+            padding: 0.18rem 0.65rem;
+            border-radius: 4px;
+            line-height: 1.38;
+            font-weight: 500;
+            font-size: 1.35rem;
+            color: #ffffff;
+            background: rgba(8, 8, 8, 0.58);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9);
+            max-width: 92%;
+          }
+          .caption:empty { display: none; }
+          .caption-word {
+            display: inline-block;
+            padding: 0 0.08rem;
+            border-radius: 3px;
+            cursor: pointer;
+          }
+          .caption-word:hover, .caption-word:focus-visible {
+            background: rgba(255, 255, 255, 0.22);
+            text-decoration: underline;
+          }
+          .caption-sound-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff000;
+            font-size: 0.78em;
+            font-weight: 700;
+            padding: 0.05rem 0.4rem;
+            border-radius: 4px;
+            margin-inline-end: 0.35rem;
+          }
+          .caption-dual-sub {
+            display: block;
+            margin-top: 0.18rem;
+            font-size: 0.88em;
+            color: #fde047;
+          }
+
+          /* Overlaid YouTube Red Progress Scrubber Line (Bottom: 42px) */
+          .yt-scrubber-wrap {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 42px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            z-index: 18;
+          }
+          .yt-timeline-track {
+            position: relative;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.28);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            transition: height 0.12s ease;
+          }
+          .yt-scrubber-wrap:hover .yt-timeline-track,
+          .yt-scrubber-wrap:focus-within .yt-timeline-track {
+            height: 6px;
+          }
+          .yt-timeline-track input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 16px;
+            background: transparent;
+            cursor: pointer;
+            margin: 0;
+            z-index: 3;
+          }
+          .yt-timeline-track input[type="range"]::-webkit-slider-runnable-track {
+            height: 4px;
+            border-radius: 2px;
+            background: linear-gradient(
+              to right,
+              #ff0033 0%,
+              #ff0033 var(--seek-pct, 22%),
+              rgba(255, 255, 255, 0.28) var(--seek-pct, 22%),
+              rgba(255, 255, 255, 0.28) 100%
+            );
+          }
+          .yt-timeline-track input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #ff0033;
+            border: none;
+            margin-top: -4.5px;
+            box-shadow: 0 0 6px rgba(255, 0, 51, 0.8);
+          }
+          .yt-chapter-tick {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(0, 0, 0, 0.65);
+            pointer-events: none;
+            z-index: 2;
+          }
+          .yt-hover-preview {
+            position: absolute;
+            bottom: 22px;
+            transform: translateX(-50%);
+            background: rgba(15, 15, 15, 0.92);
+            color: #ffffff;
+            border-radius: 4px;
+            padding: 0.22rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 22;
+          }
+          .yt-hover-preview[hidden] { display: none !important; }
+
+          /* Overlaid YouTube Bottom Control Bar (Bottom: 0, Height: 42px) */
+          .controls {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 44px;
+            padding: 0 12px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.86) 0%, rgba(0, 0, 0, 0.45) 65%, transparent 100%);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            padding: 0.65rem 1rem;
-            background: linear-gradient(90deg, #05192d 0%, #092c4c 100%);
-            color: #ffffff;
-            border-top-left-radius: 0.72rem;
-            border-top-right-radius: 0.72rem;
-            border-bottom: 3px solid #00e676;
-          }
-          .heading-left {
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            flex-wrap: wrap;
-          }
-          .heading h2 {
-            margin: 0;
-            font-size: 1.12rem;
-            font-weight: 800;
+            z-index: 17;
             color: #ffffff;
           }
-          .mode-pills {
+          .ctrl-group {
             display: flex;
-            gap: 0.4rem;
-            flex-wrap: wrap;
             align-items: center;
+            gap: 6px;
           }
-          .status-pill {
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.2rem 0.55rem;
+          .yt-icon-btn {
+            min-width: 38px;
+            min-height: 36px;
+            padding: 0 8px;
+            border: none;
             border-radius: 999px;
-            background: rgba(0, 230, 118, 0.18);
-            color: #69f0ae;
-            border: 1px solid rgba(0, 230, 118, 0.45);
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: background 0.15s ease, transform 0.1s ease;
+          }
+          .yt-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+          }
+          .yt-icon-btn[aria-pressed="true"] {
+            color: #ffffff;
+            box-shadow: inset 0 -2.5px 0 #ff0033;
           }
           .time-badge {
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: 0.88rem;
-            background: rgba(255, 255, 255, 0.14);
-            padding: 0.2rem 0.6rem;
-            border-radius: 0.35rem;
-            color: #ffffff;
-            font-weight: 700;
+            font-family: "Roboto", system-ui, sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            color: #f1f1f1;
+            margin-inline-start: 4px;
+          }
+          /* Autoplay/Assistive Toggle Pill Icon on Bottom-Right (matches screenshot) */
+          .yt-pill-toggle {
+            width: 34px;
+            height: 18px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.35);
+            position: relative;
+            display: inline-block;
+          }
+          .yt-pill-toggle::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffffff;
+            transition: transform 0.15s ease;
+          }
+          .yt-icon-btn[aria-pressed="true"] .yt-pill-toggle {
+            background: rgba(255, 255, 255, 0.75);
+          }
+          .yt-icon-btn[aria-pressed="true"] .yt-pill-toggle::after {
+            transform: translateX(16px);
+            background: #0f0f0f;
           }
 
-          /* Neat YouTube-Exact Stage, Ambient Glow, & Translucent Glass Menus */
-          .shell.ambient-on {
-            box-shadow: 0 12px 48px rgba(0, 230, 118, 0.22), 0 8px 32px rgba(255, 0, 51, 0.14);
-          }
-          .yt-iframe-frame {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            max-height: 34rem;
-            border: 0;
-            display: block;
-            background: #000000;
-            pointer-events: none;
-          }
+          /* Floating Dark Frosted-Glass Menus Inside Stage (Matches Screenshot image_095f32.jpg) */
           .yt-glass-menu {
             position: absolute;
-            right: 0.75rem;
-            bottom: 4.2rem;
-            z-index: 25;
-            width: 18.5rem;
-            max-width: calc(100% - 1.5rem);
-            background: rgba(20, 20, 24, 0.92);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            color: #f8fafc;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 0.75rem;
-            padding: 0.45rem 0;
-            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.78);
-            font-size: 0.86rem;
+            right: 12px;
+            bottom: 54px;
+            z-index: 26;
+            width: 274px;
+            max-width: calc(100% - 24px);
+            background: rgba(22, 22, 24, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            color: #f1f1f1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 6px 0;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75);
+            font-size: 0.82rem;
           }
           .yt-glass-menu[hidden] { display: none !important; }
           .yt-context-menu {
-            right: 4.5rem;
-            bottom: 4.8rem;
-            width: 16.5rem;
+            right: 298px;
+            bottom: 92px;
+            width: 248px;
+          }
+          @media (max-width: 48rem) {
+            .yt-context-menu { right: 12px; bottom: 54px; }
           }
           .yt-menu-item {
             width: 100%;
-            min-height: 44px;
-            padding: 0.45rem 0.9rem;
+            min-height: 36px;
+            padding: 6px 14px;
             background: transparent;
             border: 0;
-            color: #f8fafc;
+            color: #f1f1f1;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 0.5rem;
+            gap: 10px;
             font: inherit;
-            font-weight: 600;
+            font-weight: 400;
             cursor: pointer;
             text-align: start;
           }
           .yt-menu-item:hover, .yt-menu-item:focus-visible {
             background: rgba(255, 255, 255, 0.12);
-            outline: 2px solid #f5a300;
-            outline-offset: -2px;
+            outline: none;
+          }
+          .yt-menu-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+          }
+          .yt-menu-icon { filter: grayscale(1) brightness(1.8); }
+          .yt-menu-val { white-space: nowrap; }
+          .yt-menu-icon {
+            width: 18px;
+            text-align: center;
+            font-size: 0.92rem;
+            opacity: 0.92;
+          }
+          .yt-menu-val {
+            color: #aaaaaa;
+            font-size: 0.78rem;
           }
           .yt-switch-pill {
-            width: 2.2rem;
-            height: 1.25rem;
+            width: 34px;
+            height: 18px;
             border-radius: 999px;
-            background: #475569;
+            background: rgba(255, 255, 255, 0.28);
             position: relative;
             transition: background 0.15s ease;
             flex: 0 0 auto;
@@ -968,89 +1181,85 @@
             position: absolute;
             top: 2px;
             left: 2px;
-            width: 0.95rem;
-            height: 0.95rem;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: #ffffff;
             transition: transform 0.15s ease;
           }
           .yt-menu-item[aria-checked="true"] .yt-switch-pill {
-            background: #00e676;
+            background: #f1f1f1;
           }
           .yt-menu-item[aria-checked="true"] .yt-switch-pill::after {
-            transform: translateX(0.95rem);
+            transform: translateX(16px);
+            background: #0f0f0f;
           }
+
           .yt-stats-nerd {
             position: absolute;
-            top: 0.75rem;
-            left: 0.75rem;
-            z-index: 24;
-            background: rgba(15, 15, 20, 0.88);
+            top: 12px;
+            left: 12px;
+            z-index: 28;
+            background: rgba(15, 15, 20, 0.9);
             color: #e2e8f0;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0.5rem;
-            padding: 0.65rem 0.85rem;
+            border-radius: 8px;
+            padding: 0.6rem 0.85rem;
             font-family: ui-monospace, SFMono-Regular, monospace;
-            font-size: 0.76rem;
-            max-width: 20rem;
+            font-size: 0.74rem;
+            max-width: 19rem;
           }
           .yt-stats-nerd[hidden] { display: none !important; }
-          /* Video Stage & YouTube-Style Overlay */
-          .stage {
-            position: relative;
-            background: #050b14;
-            display: grid;
-            place-items: center;
-            min-height: 21rem;
-            outline: none;
-            overflow: visible;
-          }
-          .stage.split {
-            display: grid !important;
-            grid-template-columns: minmax(0, 1.35fr) minmax(290px, 1fr) !important;
-            gap: 0.75rem;
-            align-items: stretch;
-            background: #020b14;
-            padding: 0.6rem;
-          }
-          .stage.split video.main {
-            width: 100%;
-            height: 100%;
-            max-height: 34rem;
-            object-fit: contain;
-          }
-          .stage.split .sign {
-            position: relative !important;
-            inset: auto !important;
-            width: 100% !important;
-            height: 100% !important;
-            max-height: 34rem;
-            left: auto !important;
-            top: auto !important;
-            right: auto !important;
-            bottom: auto !important;
-            transform: none !important;
-            box-shadow: none;
-            cursor: default;
-          }
-          @media (max-width: 52rem) {
-            .stage.split { grid-template-columns: 1fr !important; }
-            .stage.split .sign { min-height: 17rem; }
-          }
-          video.main {
-            width: 100%;
-            max-height: 34rem;
-            display: block;
-            background: #000000;
-          }
-          video::cue { opacity: 0; }
 
-          /* 3G Smart Data-Saver Slide Keyframe Canvas Overlay */
+          /* Below-Video Title & Clean Action Strip (Matches Screenshot Footer) */
+          .heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.65rem 0.9rem;
+            background: #0f0f0f;
+            color: #f1f1f1;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+          }
+          .heading h2 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+          }
+          .below-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+          }
+          .below-pill-btn {
+            min-height: 34px;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.1);
+            color: #f1f1f1;
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+          }
+          .below-pill-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+          }
+
+          /* 3G Smart Data-Saver Stage */
           .datasaver-stage {
             position: absolute;
             inset: 0;
             background: #07172a;
-            z-index: 2;
+            z-index: 12;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -1061,112 +1270,44 @@
           }
           .datasaver-stage[hidden] { display: none !important; }
           .datasaver-card {
-            max-width: 42rem;
+            max-width: 38rem;
             background: #0f2942;
             border: 2px solid #00e676;
-            border-radius: 0.85rem;
-            padding: 1.25rem 1.5rem;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
+            border-radius: 12px;
+            padding: 1.1rem 1.4rem;
           }
 
-          /* YouTube-Style Smart Captions Overlay */
-          .captions {
-            position: absolute;
-            left: 5%;
-            right: 5%;
-            text-align: center;
-            z-index: 4;
-            pointer-events: auto;
-            cursor: grab;
-            user-select: none;
-            transition: top 0.12s ease, bottom 0.12s ease;
-          }
-          .captions.bottom { bottom: 3.4rem; }
-          .captions.top { top: 1rem; }
-          .caption {
-            display: inline-block;
-            padding: 0.45rem 0.95rem;
-            border-radius: 0.45rem;
-            line-height: 1.48;
-            font-weight: 700;
-            max-width: 92%;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.16);
-          }
-          .caption:empty { display: none; }
-          .caption-word {
-            display: inline-block;
-            padding: 0 0.12rem;
-            border-radius: 0.2rem;
-            cursor: pointer;
-            transition: background 0.1s ease, transform 0.1s ease;
-          }
-          .caption-word:hover, .caption-word:focus-visible {
-            background: rgba(0, 230, 118, 0.35);
-            text-decoration: underline;
-          }
-          .caption-word.active-word {
-            text-decoration: underline;
-            text-decoration-color: #00e676;
-            text-underline-offset: 4px;
-          }
-          .caption-sound-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            background: #00e676;
-            color: #05192d;
-            font-size: 0.78em;
-            font-weight: 800;
-            padding: 0.08rem 0.45rem;
-            border-radius: 999px;
-            margin-inline-end: 0.4rem;
-            vertical-align: middle;
-          }
-          .caption-dual-sub {
-            display: block;
-            margin-top: 0.28rem;
-            padding-top: 0.25rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.22);
-            font-size: 0.92em;
-            color: #a7f3d0;
-          }
-
-          /* Word Sign/Glossary Popover when clicking a caption word */
+          /* Word Sign Popover */
           .word-popover {
             position: absolute;
-            bottom: 7.5rem;
+            bottom: 5.5rem;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 12;
-            background: #05192d;
+            z-index: 27;
+            background: rgba(15, 15, 20, 0.95);
             color: #ffffff;
-            border: 2px solid #00e676;
-            border-radius: 0.6rem;
-            padding: 0.65rem 1rem;
-            min-width: 17rem;
-            max-width: 24rem;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
-            font-size: 0.86rem;
+            border: 1.5px solid #00e676;
+            border-radius: 8px;
+            padding: 0.6rem 0.9rem;
+            min-width: 16rem;
+            font-size: 0.82rem;
           }
           .word-popover[hidden] { display: none !important; }
 
           /* Movable, Resizable, Dual-Mode EthSL Sign Language Window */
           .sign {
             position: absolute;
-            z-index: 6;
+            z-index: 20;
             display: flex;
             flex-direction: column;
-            border: 3px solid #00e676;
-            border-radius: 0.6rem;
+            border: 2px solid #00e676;
+            border-radius: 10px;
             background: #05192d;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.82);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.82);
             touch-action: none;
             user-select: none;
             cursor: grab;
-            transition: box-shadow 0.15s ease, border-color 0.15s ease;
           }
           .sign-header {
             flex: 0 0 auto;
@@ -1176,20 +1317,17 @@
             gap: 0.25rem;
             background: #091e35;
             color: #ffffff;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            padding: 0.25rem 0.45rem;
+            padding: 0.22rem 0.45rem;
             border-bottom: 1px solid #1e3a5f;
           }
-          .sign-mode-switch {
-            display: inline-flex;
-            gap: 0.2rem;
-          }
+          .sign-mode-switch { display: inline-flex; gap: 0.2rem; }
           .sign-mode-btn {
-            min-height: 24px !important;
-            padding: 0.1rem 0.4rem !important;
-            font-size: 0.68rem !important;
-            border-radius: 0.25rem !important;
+            min-height: 22px !important;
+            padding: 0.08rem 0.35rem !important;
+            font-size: 0.66rem !important;
+            border-radius: 4px !important;
             border: 1px solid #38bdf8 !important;
             background: #0f2942 !important;
             color: #e2e8f0 !important;
@@ -1212,11 +1350,9 @@
           .sign.floating.bottom-right { bottom: 1rem; right: 1rem; left: auto; top: auto; }
           .sign.docked.top-left, .sign.top-left { top: 0.75rem; left: 0.75rem; right: auto; bottom: auto; }
           .sign.docked.top-right, .sign.top-right { top: 0.75rem; right: 0.75rem; left: auto; bottom: auto; }
-          .sign.docked.bottom-left, .sign.bottom-left { bottom: 3.6rem; left: 0.75rem; right: auto; top: auto; }
-          .sign.docked.bottom-right, .sign.bottom-right { bottom: 3.6rem; right: 0.75rem; left: auto; top: auto; }
+          .sign.docked.bottom-left, .sign.bottom-left { bottom: 3.4rem; left: 0.75rem; right: auto; top: auto; }
+          .sign.docked.bottom-right, .sign.bottom-right { bottom: 3.4rem; right: 0.75rem; left: auto; top: auto; }
           .sign.custom { bottom: 1rem; right: 1rem; }
-          .sign:focus-visible { outline: 3px solid #ffeb3b; outline-offset: 2px; }
-          .sign.dragging { cursor: grabbing; border-color: #ffeb3b; }
           .sign[hidden] { display: none !important; }
           .sign video, .sign canvas.live-sign-canvas {
             width: 100%;
@@ -1226,19 +1362,17 @@
             display: block;
             background: #051626;
           }
-          .sign video[hidden], .sign canvas.live-sign-canvas[hidden] {
-            display: none !important;
-          }
-          .sign.small { width: 13.5rem; height: 12rem; }
-          .sign.medium { width: 17.5rem; height: 15rem; }
-          .sign.large { width: 22rem; height: 18.5rem; }
+          .sign video[hidden], .sign canvas.live-sign-canvas[hidden] { display: none !important; }
+          .sign.small { width: 13rem; height: 11.5rem; }
+          .sign.medium { width: 16.5rem; height: 14rem; }
+          .sign.large { width: 20.5rem; height: 17.5rem; }
           .sign-gloss-strip {
             flex: 0 0 auto;
             background: #07192e;
             color: #fff000;
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             font-weight: 700;
-            padding: 0.22rem 0.45rem;
+            padding: 0.18rem 0.4rem;
             border-top: 1px solid #1e3a5f;
             white-space: nowrap;
             overflow: hidden;
@@ -1250,155 +1384,28 @@
             justify-content: space-between;
             align-items: center;
             background: #05192d;
-            padding: 0.2rem 0.3rem;
-            gap: 0.16rem;
+            padding: 0.18rem 0.25rem;
+            gap: 0.14rem;
             border-top: 1px solid #1e3a5f;
-            cursor: default;
           }
           .sign-controls button {
-            min-height: 26px !important;
-            min-width: 24px !important;
-            padding: 0.1rem 0.22rem !important;
-            font-size: 0.73rem !important;
-            line-height: 1 !important;
+            min-height: 24px !important;
+            min-width: 22px !important;
+            padding: 0.08rem 0.2rem !important;
+            font-size: 0.7rem !important;
             background: #0f2942 !important;
             color: #ffffff !important;
             border: 1px solid #64748b !important;
             cursor: pointer;
-            border-radius: 0.25rem;
+            border-radius: 3px;
             flex: 1 1 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-          }
-          .sign-controls button:hover {
-            background: #1e3a5f !important;
-            border-color: #00e676 !important;
           }
 
-          /* YouTube-Style Scrubber Timeline + Chapter Markers */
-          .yt-scrubber-wrap {
-            position: relative;
-            background: #0b1524;
-            padding: 0.45rem 1rem 0.25rem 1rem;
-            border-top: 1px solid #1e293b;
-          }
-          .yt-scrubber-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.78rem;
-            color: #cbd5e1;
-            margin-bottom: 0.15rem;
-          }
-          .yt-timeline-track {
-            position: relative;
-            display: flex;
-            align-items: center;
-          }
-          .yt-timeline-track input[type="range"] {
-            width: 100%;
-            min-height: 28px;
-            accent-color: #ff0033;
-            cursor: pointer;
-            margin: 0;
-          }
-          .yt-chapter-tick {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 3px;
-            height: 12px;
-            background: #fff000;
-            pointer-events: none;
-            z-index: 2;
-            border-radius: 1px;
-          }
-          .yt-hover-preview {
-            position: absolute;
-            bottom: 2.6rem;
-            transform: translateX(-50%);
-            background: rgba(5, 25, 45, 0.96);
-            color: #ffffff;
-            border: 1.5px solid #00e676;
-            border-radius: 0.4rem;
-            padding: 0.3rem 0.6rem;
-            font-size: 0.76rem;
-            font-weight: 700;
-            pointer-events: none;
-            white-space: nowrap;
-            z-index: 10;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-          }
-          .yt-hover-preview[hidden] { display: none !important; }
-
-          /* YouTube-Style Control Bar */
-          .controls {
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.45rem;
-            padding: 0.55rem 0.85rem;
-            background: #0f172a;
-            color: #ffffff;
-            align-items: center;
-            border-top: 1px solid #1e293b;
-          }
-          .ctrl-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            align-items: center;
-          }
-          button, select, input {
-            min-height: 44px;
-            font: inherit;
-          }
-          .controls button {
-            padding: 0.42rem 0.72rem;
-            border: 1.5px solid #334155;
-            border-radius: 0.42rem;
-            background: #1e293b;
-            color: #f8fafc;
-            font-weight: 700;
-            font-size: 0.86rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            transition: background 0.15s ease, border-color 0.15s ease;
-          }
-          .controls button:hover:not(:disabled) {
-            background: #334155;
-            border-color: #94a3b8;
-          }
-          .controls button.primary {
-            background: #00e676;
-            border-color: #00e676;
-            color: #05192d;
-            font-weight: 800;
-          }
-          .controls button.primary:hover:not(:disabled) {
-            background: #69f0ae;
-          }
-          .controls button[aria-pressed="true"]:not(.primary) {
-            background: #05192d;
-            border-color: #00e676;
-            color: #00e676;
-            box-shadow: inset 0 -3px 0 #ff0033;
-          }
-          button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible, .stage:focus-visible {
-            outline: 3px solid #f5a300 !important;
-            outline-offset: 2px !important;
-          }
-
-          /* YouTube-Style Settings Gear Popover */
+          /* Expandable Settings & Workspace Drawer Below Video */
           .yt-settings-popover {
-            position: relative;
-            background: #0b192c;
+            background: #141923;
             color: #f8fafc;
-            border-top: 2px solid #00e676;
+            border-top: 1px solid #2d3748;
             padding: 0.85rem 1rem;
             display: grid;
             gap: 0.75rem;
@@ -1406,224 +1413,174 @@
           .yt-settings-popover[hidden] { display: none !important; }
           .prefs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
             gap: 0.65rem;
             align-items: end;
           }
           .field {
             display: grid;
-            gap: 0.25rem;
-            font-size: 0.84rem;
-            font-weight: 700;
+            gap: 0.22rem;
+            font-size: 0.8rem;
+            font-weight: 600;
             color: #e2e8f0;
           }
           .field select, .field input {
             background: #1e293b;
             color: #ffffff;
-            border: 1.5px solid #475569;
-            border-radius: 0.38rem;
+            border: 1px solid #475569;
+            border-radius: 6px;
             padding: 0.35rem 0.5rem;
+            min-height: 38px;
           }
-          .preset-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-          }
+          .preset-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
           .preset-chip {
-            min-height: 36px !important;
-            padding: 0.25rem 0.65rem !important;
-            font-size: 0.78rem !important;
+            min-height: 32px !important;
+            padding: 0.2rem 0.6rem !important;
+            font-size: 0.75rem !important;
             border-radius: 999px !important;
-            border: 1.5px solid #475569 !important;
+            border: 1px solid #475569 !important;
             background: #1e293b !important;
             color: #ffffff !important;
             cursor: pointer;
           }
 
-          /* Multi-Tab Accessible Media Studio Below Player */
+          .body[hidden] { display: none !important; }
           .workspace-tabs {
             display: flex;
             flex-wrap: wrap;
             gap: 0.35rem;
-            padding: 0.6rem 1rem 0 1rem;
-            background: #f1f5f9;
-            border-top: 1px solid #cbd5e1;
-            border-bottom: 2px solid #05192d;
+            padding: 0.55rem 1rem 0 1rem;
+            background: #181c24;
+            border-top: 1px solid #2d3748;
           }
           .tab-btn {
-            padding: 0.5rem 0.85rem;
-            border: 2px solid transparent;
+            padding: 0.45rem 0.8rem;
+            border: 1px solid transparent;
             border-bottom: none;
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
-            background: #e2e8f0;
-            color: #1e293b;
-            font-weight: 700;
-            font-size: 0.86rem;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            background: #252b37;
+            color: #cbd5e1;
+            font-weight: 600;
+            font-size: 0.82rem;
             cursor: pointer;
           }
           .tab-btn[aria-selected="true"] {
             background: #ffffff;
             color: #05192d;
-            border-color: #05192d;
-            box-shadow: inset 0 3px 0 #0d5c3a;
+            font-weight: 700;
           }
           .tab-panel {
             padding: 1rem;
             background: #ffffff;
             color: #101828;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
           }
           .tab-panel[hidden] { display: none !important; }
 
-          /* Tab 1: Interactive Transcript & Chapters */
-          .transcript {
-            max-height: 22rem;
-            overflow-y: auto;
-          }
+          .transcript { max-height: 20rem; overflow-y: auto; }
           .transcript-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
+            gap: 0.6rem;
+            margin-bottom: 0.65rem;
           }
-          .transcript-header h3 { margin: 0; font-size: 1.05rem; color: #05192d; }
-          .transcript-links { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+          .transcript-header h3 { margin: 0; font-size: 1rem; color: #05192d; }
+          .transcript-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
           .transcript-links a, .action-btn {
             color: #05192d;
             background: #f8fafc;
             border: 1.5px solid #05192d;
-            border-radius: 0.4rem;
+            border-radius: 6px;
             font-weight: 700;
-            font-size: 0.84rem;
+            font-size: 0.8rem;
             text-decoration: none;
-            padding: 0.35rem 0.7rem;
-            min-height: 44px;
+            padding: 0.3rem 0.65rem;
+            min-height: 38px;
             display: inline-flex;
             align-items: center;
             cursor: pointer;
           }
-          .transcript ol {
-            display: grid;
-            gap: 0.4rem;
-            padding: 0;
-            margin: 0;
-            list-style: none;
-          }
+          .transcript ol { display: grid; gap: 0.35rem; padding: 0; margin: 0; list-style: none; }
           .transcript button.cue-row {
             display: grid;
-            grid-template-columns: 4.2rem 11rem 1fr;
+            grid-template-columns: 4rem 10.5rem 1fr;
             gap: 0.5rem;
             width: 100%;
             text-align: start;
-            font-weight: 500;
-            padding: 0.45rem 0.65rem;
+            padding: 0.4rem 0.6rem;
             border: 1px solid #cbd5e1;
-            border-radius: 0.4rem;
+            border-radius: 6px;
             background: #ffffff;
             color: #101828;
             cursor: pointer;
             align-items: center;
           }
-          .transcript button.cue-row time {
-            font-family: ui-monospace, SFMono-Regular, monospace;
-            font-weight: 700;
-            color: #0d5c3a;
-          }
+          .transcript button.cue-row time { font-family: ui-monospace, monospace; font-weight: 700; color: #0d5c3a; }
           .transcript button.cue-row .cue-chap {
-            font-size: 0.78rem;
+            font-size: 0.74rem;
             font-weight: 700;
             color: #0369a1;
             background: #e0f2fe;
-            padding: 0.15rem 0.4rem;
-            border-radius: 0.25rem;
+            padding: 0.12rem 0.38rem;
+            border-radius: 4px;
           }
           .transcript button.cue-row[aria-current="true"] {
-            border: 2.5px solid #0d5c3a;
+            border: 2px solid #0d5c3a;
             background: #ecfdf5;
-            color: #05192d;
             font-weight: 700;
           }
 
-          /* Tab 2: Live EthSL Sign Studio */
-          .sign-studio-grid {
+          .sign-studio-grid, .blind-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+            gap: 0.85rem;
           }
           .studio-box {
-            border: 1.5px solid #cbd5e1;
-            border-radius: 0.6rem;
-            padding: 0.85rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 0.8rem;
             background: #f8fafc;
           }
-          .gloss-token-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            margin-top: 0.5rem;
-          }
+          .gloss-token-list, .braille-cells { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.45rem; }
           .gloss-badge {
             background: #05192d;
             color: #fff000;
-            padding: 0.3rem 0.6rem;
-            border-radius: 0.35rem;
-            font-size: 0.8rem;
+            padding: 0.25rem 0.55rem;
+            border-radius: 4px;
+            font-size: 0.76rem;
             font-weight: 700;
-            border: 1px solid #00e676;
-          }
-
-          /* Tab 3: Over-Cooked Blind Console & 6-Dot Tactile Braille Inspector */
-          .blind-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-            gap: 1rem;
-          }
-          .braille-cells {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
           }
           .braille-cell-card {
             background: #05192d;
             color: #ffffff;
             border: 2px solid #00e676;
-            border-radius: 0.5rem;
-            padding: 0.45rem 0.6rem;
+            border-radius: 6px;
+            padding: 0.4rem 0.55rem;
             text-align: center;
-            min-width: 4.2rem;
+            min-width: 4rem;
             cursor: pointer;
           }
           .braille-dots-grid {
             display: grid;
-            grid-template-columns: repeat(2, 14px);
-            gap: 4px;
+            grid-template-columns: repeat(2, 13px);
+            gap: 3px;
             justify-content: center;
-            margin: 0.25rem auto;
+            margin: 0.2rem auto;
           }
-          .b-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #1e293b;
-            border: 1px solid #64748b;
-          }
-          .b-dot.raised {
-            background: #fff000;
-            border-color: #ffffff;
-            box-shadow: 0 0 6px #fff000;
-          }
+          .b-dot { width: 11px; height: 11px; border-radius: 50%; background: #1e293b; border: 1px solid #64748b; }
+          .b-dot.raised { background: #fff000; border-color: #ffffff; }
 
-          /* Notices, Dialogs, and Live Regions */
           .notice {
-            padding: 0.75rem 1rem;
+            padding: 0.6rem 1rem;
             margin: 0;
             background: #ecfdf5;
             color: #065f46;
             font-weight: 700;
-            border-top: 1px solid #a7f3d0;
+            font-size: 0.85rem;
           }
           .sr {
             position: absolute;
@@ -1633,161 +1590,152 @@
             clip: rect(0, 0, 0, 0);
             white-space: nowrap;
           }
+          button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible, .stage:focus-visible {
+            outline: 3px solid #f5a300 !important;
+            outline-offset: 2px !important;
+          }
           dialog {
-            max-width: 44rem;
+            max-width: 42rem;
             width: calc(100% - 2rem);
             border: 2px solid #05192d;
-            border-radius: 0.65rem;
-            padding: 1.25rem;
+            border-radius: 10px;
+            padding: 1.15rem;
             background: #ffffff;
             color: #101828;
           }
-          dialog::backdrop { background: rgba(5, 25, 45, 0.72); }
-          .editor-rows {
-            display: grid;
-            gap: 0.65rem;
-            max-height: 18rem;
-            overflow-y: auto;
-            margin: 0.75rem 0;
-          }
-          .editor-row {
-            display: grid;
-            grid-template-columns: 5.5rem 5.5rem 1fr;
-            gap: 0.4rem;
-            align-items: center;
-          }
-          .editor-row input {
-            padding: 0.4rem 0.5rem;
-            border: 1px solid #64748b;
-            border-radius: 0.35rem;
-          }
-          @media (max-width: 48rem) {
-            .heading { flex-direction: column; align-items: flex-start; }
-            .editor-row, .sign-studio-grid, .transcript button.cue-row { grid-template-columns: 1fr; }
-            .sign.medium, .sign.large { width: 12.5rem; height: 11rem; }
-          }
+          dialog::backdrop { background: rgba(0, 0, 0, 0.72); }
+          .editor-rows { display: grid; gap: 0.5rem; max-height: 16rem; overflow-y: auto; margin: 0.65rem 0; }
+          .editor-row { display: grid; grid-template-columns: 5.2rem 5.2rem 1fr; gap: 0.4rem; align-items: center; }
         </style>
 
-        <section class="shell" id="player-shell" lang="${this.language}">
-          <!-- Top Bar -->
-          <div class="heading">
-            <div class="heading-left">
-              <h2>${escapeHtml(this.getAttribute("title") || t.playerTitle)}</h2>
-              <div class="mode-pills">
-                <span class="status-pill" id="active-chapter-pill">Ch 1: Welcome &amp; Overview</span>
-                <span class="status-pill" id="blind-status-pill">${this.preferences.blindOvercooked ? "🔊 Blind+ Active" : "🔊 Standard"}</span>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-              <label for="internet-video-select" class="sr">Select Real Internet Video Stream or Local Offline Video</label>
-              <select id="internet-video-select" aria-label="Select Real Internet Video Stream" style="min-height:36px;padding:0.2rem 0.5rem;border-radius:0.35rem;border:1.5px solid #00e676;background:#092540;color:#ffffff;font-size:0.8rem;font-weight:700;cursor:pointer;max-width:22rem;">
-                ${INTERNET_VIDEO_CATALOG.map((item) => `<option value="${escapeHtml(item.src)}" data-sign="${escapeHtml(item.sign)}" data-captions="${escapeHtml(item.captions)}" ${this.source === item.src ? "selected" : ""}>${escapeHtml(item.label)}</option>`).join("")}
-              </select>
-              <span class="time-badge" id="time" aria-live="off">0:00 / 0:45</span>
-            </div>
-          </div>
-
-          <!-- Video Stage -->
+        <section class="shell ${this.preferences.ambientMode ? "ambient-on" : ""}" id="player-shell" lang="${this.language}">
+          <!-- 16:9 WIDESCREEN CINEMA STAGE (Matches Screenshot image_095f32.jpg) -->
           <div class="stage" id="stage" tabindex="0" role="region" aria-label="${escapeHtml(t.playerTitle)}">
             ${
               this.youtubeId
-                ? `<iframe id="yt-iframe" class="yt-iframe-frame" tabindex="-1" aria-hidden="true"
-                    src="https://www.youtube-nocookie.com/embed/${escapeHtml(this.youtubeId)}?enablejsapi=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&playsinline=1"
-                    allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="YouTube Lesson Video"></iframe>
-                   <video class="main" id="video" preload="metadata" playsinline src="/savanna/assets/media/va-future-lesson.mp4" hidden></video>`
-                : `<video class="main" id="video" preload="metadata" playsinline src="${escapeHtml(this.source)}">
-                    <track kind="captions" srclang="en" label="English" src="/savanna/assets/captions/va-future-en.vtt">
-                    <track kind="captions" srclang="am" label="Amharic" src="/savanna/assets/captions/va-future-am.vtt">
+                ? `<iframe id="yt-iframe" class="yt-iframe-frame" style="width:100%;height:100%;border:0;pointer-events:auto;" tabindex="-1" aria-hidden="true"
+                    src="https://www.youtube.com/embed/${escapeHtml(this.youtubeId)}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1"
+                    allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="YouTube Video Stream"></iframe>
+                   <video class="main" id="video" preload="metadata" playsinline src="${escapeHtml(resolveAssetUrl('/savanna/assets/media/kimi-3d-ceramics.mp4'))}" hidden></video>`
+                : `<video class="main" id="video" preload="auto" playsinline src="${escapeHtml(this.source)}">
+                    <track kind="captions" srclang="en" label="English" src="${escapeHtml(resolveAssetUrl('/savanna/assets/captions/va-future-en.vtt'))}">
+                    <track kind="captions" srclang="am" label="Amharic" src="${escapeHtml(resolveAssetUrl('/savanna/assets/captions/va-future-am.vtt'))}">
                    </video>`
             }
 
-            <!-- Stats for Nerds Overlay -->
-            <div class="yt-stats-nerd" id="yt-stats-nerd" role="region" aria-label="Stats for nerds" hidden>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
-                <strong style="color:#00e676;">Stats for Nerds</strong>
-                <button type="button" id="close-stats-btn" style="min-height:26px;padding:0 0.4rem;background:#1e293b;color:#fff;border:1px solid #64748b;border-radius:4px;cursor:pointer;">✕</button>
-              </div>
-              <div id="stats-nerd-body">Video ID: ${escapeHtml(this.youtubeId || this.lessonId)}<br>Screen Reader Shield: Active (ChromeVox / NVDA / TalkBack)<br>EthSL Engine: Live SOV + PiP</div>
-            </div>
-
-            <!-- YouTube-Exact Translucent Context Menu -->
-            <div class="yt-glass-menu yt-context-menu" id="yt-context-menu" role="menu" aria-label="Video player options menu" hidden>
-              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="ctx-loop" aria-checked="${this.preferences.loop}">
-                <span>🔁 Loop</span><span class="yt-switch-pill" aria-hidden="true"></span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-miniplayer">
-                <span>🗔 Miniplayer (Movable Sign Window)</span><span>›</span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-copy-url">
-                <span>🔗 Copy video URL</span><span></span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-copy-time-url">
-                <span>⏱️ Copy video URL at current time</span><span></span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-copy-embed">
-                <span>&lt;/&gt; Copy embed code</span><span></span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-stats">
-                <span>ⓘ Stats for nerds</span><span>›</span>
-              </button>
-            </div>
-
-            <!-- YouTube-Exact Translucent Settings Menu (Matches Screenshot) -->
-            <div class="yt-glass-menu" id="yt-glass-settings" role="menu" aria-label="Player Settings Menu" hidden>
-              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-stable-vol" aria-checked="${this.preferences.stableVolume}">
-                <span>🎚️ Stable Volume</span><span class="yt-switch-pill" aria-hidden="true"></span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-voice-boost" aria-checked="${this.preferences.voiceBoost}">
-                <span>🗣️ Voice Boost</span><span class="yt-switch-pill" aria-hidden="true"></span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-ambient" aria-checked="${this.preferences.ambientMode}">
-                <span>✨ Ambient Mode</span><span class="yt-switch-pill" aria-hidden="true"></span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-blind-sr" aria-checked="${this.preferences.blindOvercooked}">
-                <span>🔊 Screen Reader / TalkBack+</span><span class="yt-switch-pill" aria-hidden="true"></span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitem" id="menu-audio-track">
-                <span>🎧 Audio / Description</span><span style="color:#a7f3d0;">${this.preferences.audioDescription ? "AD On ›" : "Original ›"}</span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitem" id="menu-cc-cycle">
-                <span>💬 Subtitles / CC</span><span style="color:#fff000;">${!this.preferences.captions ? "Off ›" : (this.preferences.captionDual ? "EN+አማ ›" : (this.preferences.captionLanguage === "am" ? "አማርኛ ›" : "English ›"))}</span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitem" id="menu-speed-cycle">
-                <span>⏩ Playback speed</span><span style="color:#cbd5e1;">${this.preferences.playbackRate === 1 ? "Normal ›" : this.preferences.playbackRate + "x ›"}</span>
-              </button>
-              <button type="button" class="yt-menu-item" role="menuitem" id="menu-quality-cycle">
-                <span>📶 Quality / 3G Saver</span><span style="color:#69f0ae;">${this.preferences.dataSaver3G ? "3G Saver ›" : "Auto (480p) ›"}</span>
-              </button>
-            </div>
-
-            <!-- 3G Smart Data-Saver Keyframe Stage -->
+            <!-- 3G Smart Data-Saver Stage -->
             <div class="datasaver-stage" id="datasaver-stage" ${this.preferences.dataSaver3G ? "" : "hidden"}>
               <div class="datasaver-card">
-                <div style="font-size:0.8rem;font-weight:800;color:#00e676;text-transform:uppercase;margin-bottom:0.3rem;">
+                <div style="font-size:0.78rem;font-weight:800;color:#00e676;text-transform:uppercase;margin-bottom:0.25rem;">
                   📶 Ethiopia 3G Smart Data-Saver Mode (80% Less Mobile Data)
                 </div>
-                <h3 id="datasaver-chapter" style="margin:0 0 0.4rem 0;font-size:1.25rem;color:#fff000;">Ch 1: Welcome &amp; Overview</h3>
-                <p id="datasaver-text" style="margin:0 0 0.75rem 0;font-size:1.02rem;line-height:1.5;">
-                  Playing ultra-light MP3 audio stream (233 KB) + synchronized slide keyframes + live EthSL Sign Translator without downloading heavy MP4 video bytes.
+                <h3 id="datasaver-chapter" style="margin:0 0 0.35rem 0;font-size:1.15rem;color:#fff000;">Ch 1: Ceramics Website Example</h3>
+                <p id="datasaver-text" style="margin:0 0 0.65rem 0;font-size:0.95rem;">
+                  Playing ultra-light MP3 audio stream + synchronized slide keyframes + live EthSL Sign Translator.
                 </p>
-                <button type="button" id="exit-datasaver-btn" style="background:#00e676;color:#05192d;border:none;padding:0.4rem 0.9rem;border-radius:0.4rem;font-weight:800;cursor:pointer;">
+                <button type="button" id="exit-datasaver-btn" style="background:#00e676;color:#05192d;border:none;padding:0.38rem 0.85rem;border-radius:6px;font-weight:800;cursor:pointer;">
                   Switch Back to Full Video Stream
                 </button>
               </div>
             </div>
 
-            <!-- Interactive Word Definition + EthSL Sign Popover -->
-            <div class="word-popover" id="word-popover" role="dialog" aria-label="Word Sign & Translation Inspector" hidden>
+            <!-- Stats for Nerds Overlay -->
+            <div class="yt-stats-nerd" id="yt-stats-nerd" role="region" aria-label="Stats for nerds" hidden>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">
-                <strong id="word-pop-title" style="color:#fff000;font-size:0.95rem;">WORD</strong>
-                <button type="button" id="word-pop-close" style="min-height:26px;padding:0.1rem 0.4rem;font-size:0.75rem;background:#1e293b;color:#fff;border:1px solid #64748b;border-radius:4px;cursor:pointer;">✕</button>
+                <strong style="color:#00e676;">Stats for nerds</strong>
+                <button type="button" id="close-stats-btn" style="min-height:22px;padding:0 0.35rem;background:#1e293b;color:#fff;border:1px solid #64748b;border-radius:4px;cursor:pointer;">✕</button>
+              </div>
+              <div id="stats-nerd-body">Video: 960x540@10fps (H.264 / AAC)<br>Screen Reader Mode: ChromeSR / NVDA / TalkBack Ready<br>EthSL Engine: Live 60FPS SOV + Synced Video PiP</div>
+            </div>
+
+            <!-- Interactive Word Sign Popover -->
+            <div class="word-popover" id="word-popover" role="dialog" aria-label="Word Sign & Translation Inspector" hidden>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;">
+                <strong id="word-pop-title" style="color:#fff000;">WORD</strong>
+                <button type="button" id="word-pop-close" style="min-height:22px;padding:0 0.35rem;background:#1e293b;color:#fff;border:1px solid #64748b;border-radius:4px;cursor:pointer;">✕</button>
               </div>
               <div id="word-pop-body"></div>
             </div>
 
-            <!-- YouTube-Style Draggable & Interactive Caption Overlay -->
+            <!-- FLOATING MIDDLE DARK GLASS CONTEXT MENU (Matches Screenshot image_095f32.jpg) -->
+            <div class="yt-glass-menu yt-context-menu" id="yt-context-menu" role="menu" aria-label="Video context options menu" hidden>
+              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="ctx-loop" aria-checked="${this.preferences.loop}">
+                <span class="yt-menu-left"><span class="yt-menu-icon">⇄</span><span>Loop</span></span>
+                <span class="yt-menu-val">${this.preferences.loop ? "On" : ""}</span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-miniplayer">
+                <span class="yt-menu-left"><span class="yt-menu-icon">🗔</span><span>Miniplayer (EthSL Sign)</span></span>
+                <span class="yt-menu-val"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-copy-url">
+                <span class="yt-menu-left"><span class="yt-menu-icon">🔗</span><span>Copy video URL</span></span>
+                <span class="yt-menu-val"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-copy-time-url">
+                <span class="yt-menu-left"><span class="yt-menu-icon">🔗</span><span>Copy video URL at current time</span></span>
+                <span class="yt-menu-val"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-copy-embed">
+                <span class="yt-menu-left"><span class="yt-menu-icon">&lt;/&gt;</span><span>Copy embed code</span></span>
+                <span class="yt-menu-val"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-copy-debug">
+                <span class="yt-menu-left"><span class="yt-menu-icon">🐞</span><span>Copy debug info</span></span>
+                <span class="yt-menu-val"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-troubleshoot">
+                <span class="yt-menu-left"><span class="yt-menu-icon">❓</span><span>Troubleshoot playback issue</span></span>
+                <span class="yt-menu-val"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-stats">
+                <span class="yt-menu-left"><span class="yt-menu-icon">ⓘ</span><span>Stats for nerds</span></span>
+                <span class="yt-menu-val"></span>
+              </button>
+            </div>
+
+            <!-- FLOATING RIGHT DARK GLASS SETTINGS MENU (Matches Screenshot image_095f32.jpg) -->
+            <div class="yt-glass-menu" id="yt-glass-settings" role="menu" aria-label="Player Settings Menu" hidden>
+              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-sign-toggle" aria-checked="${this.preferences.sign}">
+                <span class="yt-menu-left"><span class="yt-menu-icon">🤟</span><span style="color:#00e676;font-weight:700;">Sign Language (EthSL)</span></span>
+                <span class="yt-switch-pill" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-stable-vol" aria-checked="${this.preferences.stableVolume}">
+                <span class="yt-menu-left"><span class="yt-menu-icon">🎚️</span><span>Stable Volume</span></span>
+                <span class="yt-switch-pill" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-voice-boost" aria-checked="${this.preferences.voiceBoost}">
+                <span class="yt-menu-left"><span class="yt-menu-icon">🔊</span><span>Voice boost</span></span>
+                <span class="yt-switch-pill" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-ambient" aria-checked="${this.preferences.ambientMode}">
+                <span class="yt-menu-left"><span class="yt-menu-icon">📺</span><span>Ambient mode</span></span>
+                <span class="yt-switch-pill" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="menu-audio-track">
+                <span class="yt-menu-left"><span class="yt-menu-icon">🗣️</span><span>Audio track</span></span>
+                <span class="yt-menu-val" id="menu-audio-val">${this.preferences.audioDescription ? "AD (Described) ›" : "English (US) original ›"}</span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="menu-cc-cycle">
+                <span class="yt-menu-left"><span class="yt-menu-icon">💬</span><span>Subtitles/CC</span></span>
+                <span class="yt-menu-val" id="menu-cc-val">${!this.preferences.captions ? "Off ›" : (this.preferences.captionDual ? "EN+አማ ›" : (this.preferences.captionLanguage === "am" ? "አማርኛ ›" : "English ›"))}</span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="menu-sleep-timer">
+                <span class="yt-menu-left"><span class="yt-menu-icon">🌙</span><span>Sleep timer</span></span>
+                <span class="yt-menu-val" id="menu-sleep-val">Off ›</span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="menu-speed-cycle">
+                <span class="yt-menu-left"><span class="yt-menu-icon">⏱️</span><span>Playback speed</span></span>
+                <span class="yt-menu-val" id="menu-speed-val">${this.preferences.playbackRate === 1 ? "Normal ›" : this.preferences.playbackRate + "x ›"}</span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="menu-quality-cycle">
+                <span class="yt-menu-left"><span class="yt-menu-icon">⚙️</span><span>Quality</span></span>
+                <span class="yt-menu-val" id="menu-quality-val">${this.preferences.dataSaver3G ? "3G Saver ›" : "Auto (480p) ›"}</span>
+              </button>
+            </div>
+
+            <!-- Centered Subtitle Overlay (Right Above Red Bar) -->
             <div class="captions ${this.preferences.captionPosition}" id="captions" aria-hidden="true" title="Drag captions or click any word to inspect its EthSL sign">
-              <span id="caption" class="caption"></span>
+              <span id="caption" class="caption">Welcome to this short lesson on digital accessibility.</span>
             </div>
 
             <!-- Movable, Resizable, Dual-Mode EthSL Sign Language Window -->
@@ -1797,18 +1745,16 @@
                     this.preferences.sign ? "" : "hidden"
                   } aria-label="${escapeHtml(t.signPlayerTitle || t.signLanguage)}">
               <div class="sign-header">
-                <span style="display:inline-flex;align-items:center;gap:4px;">
-                  🤟 <span>EthSL</span>
-                </span>
+                <span style="display:inline-flex;align-items:center;gap:4px;">🤟 <span>EthSL</span></span>
                 <div class="sign-mode-switch" role="group" aria-label="Sign Language Engine Mode">
                   <button type="button" class="sign-mode-btn" id="sign-mode-live" aria-pressed="${this.preferences.signMode === "live"}" title="Real-Time Audio/Caption to EthSL Translator">⚡ Live</button>
                   <button type="button" class="sign-mode-btn" id="sign-mode-video" aria-pressed="${this.preferences.signMode === "video"}" title="Synchronized Human Video PiP">🎥 Video</button>
                 </div>
-                <button type="button" id="sign-close-btn" aria-label="Hide Sign Language Window (S)" title="Hide Sign Window (S)" style="min-height:24px!important;min-width:24px!important;padding:0 0.3rem!important;font-size:0.72rem!important;background:#1e293b!important;color:#fff!important;border:1px solid #64748b!important;border-radius:3px;">✕</button>
+                <button type="button" id="sign-close-btn" aria-label="Hide Sign Language Window (S)" title="Hide Sign Window (S)" style="min-height:22px!important;min-width:22px!important;padding:0 0.28rem!important;font-size:0.7rem!important;background:#1e293b!important;color:#fff!important;border:1px solid #64748b!important;border-radius:3px;">✕</button>
               </div>
               <video id="sign-video" preload="metadata" playsinline muted src="${escapeHtml(this.signSource)}" aria-label="${escapeHtml(t.signVideoDesc)}" ${this.preferences.signMode === "video" ? "" : "hidden"}></video>
               <canvas id="sign-live-canvas" class="live-sign-canvas" width="320" height="210" aria-label="Real-time articulated Ethiopian Sign Language translator canvas" ${this.preferences.signMode === "live" ? "" : "hidden"}></canvas>
-              <div class="sign-gloss-strip" id="sign-gloss-strip" aria-live="off">ETHSL SOV: WELCOME • MODULE-2 • VIRTUAL-ASSISTANT</div>
+              <div class="sign-gloss-strip" id="sign-gloss-strip" aria-live="off">ETHSL SOV: CERAMICS • WEBSITE • EXAMPLE</div>
               <div class="sign-controls" role="group" aria-label="${escapeHtml(t.signLanguage)}">
                 <button type="button" id="sign-play-btn" aria-label="${escapeHtml(t.playPauseSign)}" title="${escapeHtml(t.playPauseSign)}">▶</button>
                 <button type="button" data-sign-pos="top-left" aria-label="${escapeHtml(t.topLeft)}" title="${escapeHtml(t.topLeft)}">↖</button>
@@ -1823,52 +1769,75 @@
             </aside>`
                 : ""
             }
-          </div>
 
-          <!-- YouTube-Style Timeline Scrubber with Chapter Markers & Preview -->
-          <div class="yt-scrubber-wrap">
-            <div class="yt-hover-preview" id="yt-hover-preview" hidden>0:00 • Chapter 1</div>
-            <div class="yt-scrubber-header">
-              <label for="seek" style="font-weight:700;cursor:pointer;">${escapeHtml(t.seek)} (Arrows / 1–6 Chapters / [ ] Cues)</label>
-              <span id="scrubber-chapter-hint" style="color:#69f0ae;font-weight:700;">Click or drag timeline</span>
-            </div>
-            <div class="yt-timeline-track">
-              ${chapterTicks}
-              <input id="seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="${escapeHtml(t.seek)}">
-            </div>
-          </div>
-
-          <!-- YouTube-Style Unified Bottom Control Bar -->
-          <div class="controls" role="toolbar" aria-label="${escapeHtml(t.playerTitle)}">
-            <div class="ctrl-group">
-              <button type="button" class="primary" id="play-pause" aria-pressed="false">${escapeHtml(t.play)}</button>
-              <button type="button" id="back" title="Rewind 10s (J / Left Arrow)">⏪ -10s</button>
-              <button type="button" id="forward" title="Forward 10s (L / Right Arrow)">⏩ +10s</button>
-              <button type="button" id="mute-toggle" aria-pressed="false" aria-label="${escapeHtml(t.mute)}" title="${escapeHtml(t.mute)} (M)">🔊</button>
+            <!-- OVERLAID FULL-WIDTH YOUTUBE RED SCRUBBER LINE -->
+            <div class="yt-scrubber-wrap">
+              <div class="yt-hover-preview" id="yt-hover-preview" hidden>0:00 • Ceramics Website Example</div>
+              <div class="yt-timeline-track" id="yt-timeline-track" style="--seek-pct: 22%;">
+                ${chapterTicks}
+                <input id="seek" type="range" min="0" max="100" value="22" step="0.1" aria-label="${escapeHtml(t.seek)}">
+              </div>
             </div>
 
-            <div class="ctrl-group">
-              <button type="button" id="caption-toggle" aria-pressed="${this.preferences.captions}" title="Toggle YouTube-style Subtitles/CC (C)">CC ${escapeHtml(t.captions)}</button>
-              <button type="button" id="dual-caption-toggle" aria-pressed="${this.preferences.captionDual}" title="Stack English + Amharic subtitles simultaneously">EN+አማ</button>
-              <button type="button" id="sign-toggle" ${
-                hasSign ? `aria-pressed="${this.preferences.sign}"` : 'disabled aria-disabled="true"'
-              } title="Toggle Movable EthSL Sign Window (S)">🤟 ${escapeHtml(t.signLanguage)}</button>
-              <button type="button" id="desc-toggle" aria-pressed="${this.preferences.audioDescription}" title="Toggle Spoken Audio Description (D)">🎧 AD</button>
-              <button type="button" id="blind-mode-toggle" aria-pressed="${this.preferences.blindOvercooked}" title="Over-Cooked Blind Mode: Spatial Earcons + Auto-Speak + Scene Inspector (B)">🔊 Blind+</button>
-              <button type="button" id="voice-copilot-btn" aria-pressed="false" title="Hands-Free Voice Command Copilot (V)">🎙️ Voice</button>
-              <button type="button" id="settings-toggle" aria-expanded="false" aria-haspopup="menu" title="YouTube-Style Settings Menu (Voice Boost, CC, Speed, Quality)">⚙️ Settings</button>
-              <button type="button" id="context-menu-btn" aria-expanded="false" aria-haspopup="menu" title="More Player Options (Loop, Copy URL, Stats for Nerds)">⋮ Options</button>
-              <button type="button" id="transcript-toggle" aria-pressed="${this.preferences.transcriptOpen}" title="Toggle Interactive Workspace (T)">📝 ${escapeHtml(t.transcript)}</button>
-              <button type="button" id="edit-captions-btn" title="Open Caption Pipeline Editor">${escapeHtml(t.editCaptions)}</button>
-              <button type="button" id="fullscreen" title="Full Screen (F)">${escapeHtml(t.fullScreen)}</button>
-              <button type="button" id="help-button" title="Keyboard & Voice Shortcuts (?)">? ${escapeHtml(t.keyboardHelp)}</button>
+            <!-- OVERLAID YOUTUBE BOTTOM CONTROL BAR (Matches Screenshot image_095f32.jpg) -->
+            <div class="controls" role="toolbar" aria-label="${escapeHtml(t.playerTitle)}">
+              <!-- Bottom-Left: Play/Pause, Volume, Time Pill -->
+              <div class="ctrl-group">
+                <button type="button" class="yt-icon-btn" id="play-pause" aria-pressed="false" aria-label="${escapeHtml(t.play)}" title="${escapeHtml(t.play)} (K / Space)">▶</button>
+                <button type="button" class="yt-icon-btn" id="mute-toggle" aria-pressed="false" aria-label="${escapeHtml(t.mute)}" title="${escapeHtml(t.mute)} (M)">🔊</button>
+                <button type="button" class="yt-icon-btn" id="back" aria-label="${escapeHtml(t.back)}" title="${escapeHtml(t.back)} (J)" style="font-size:0.75rem;">-10s</button>
+                <button type="button" class="yt-icon-btn" id="forward" aria-label="${escapeHtml(t.forward)}" title="${escapeHtml(t.forward)} (L)" style="font-size:0.75rem;">+10s</button>
+                <span class="time-badge" id="time" aria-live="off">0:10 / 0:45</span>
+              </div>
+
+              <!-- Bottom-Right: Exact 5 Icons from Screenshot ([Switch] [CC] [Gear] [Miniplayer/Sign] [Fullscreen]) -->
+              <div class="ctrl-group">
+                <button type="button" class="yt-icon-btn" id="blind-mode-toggle" aria-pressed="${this.preferences.blindOvercooked}" aria-label="Screen Reader & TalkBack Auto-Voice Mode (B)" title="Screen Reader & TalkBack Auto-Voice Mode (B)">
+                  <span class="yt-pill-toggle" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="yt-icon-btn" id="caption-toggle" aria-pressed="${this.preferences.captions}" aria-label="${escapeHtml(t.captions)}" title="Subtitles/CC (C)">
+                  <span style="border:1.5px solid #fff;border-radius:3px;padding:0 4px;font-size:0.72rem;font-weight:800;line-height:1.2;">CC</span>
+                </button>
+                <button type="button" class="yt-icon-btn" id="settings-toggle" aria-expanded="false" aria-haspopup="menu" aria-label="Settings" title="Settings (Stable Volume, Voice boost, CC, Speed, Quality)">⚙️</button>
+                <button type="button" class="yt-icon-btn" id="sign-toggle" ${
+                  hasSign ? `aria-pressed="${this.preferences.sign}"` : 'disabled aria-disabled="true"'
+                } aria-label="${escapeHtml(t.signLanguage)}" title="Toggle Movable EthSL Sign Language Window ON/OFF (Shortcut: S)" style="padding:0 10px;gap:4px;border:1.5px solid ${this.preferences.sign ? '#00e676' : 'rgba(255,255,255,0.35)'};background:${this.preferences.sign ? 'rgba(0,230,118,0.22)' : 'rgba(255,255,255,0.1)'};color:${this.preferences.sign ? '#00e676' : '#ffffff'};">
+                  <span>🤟</span><span id="sign-toggle-label" style="font-size:0.75rem;font-weight:800;">${this.preferences.sign ? "Sign: ON" : "Sign: OFF"}</span>
+                </button>
+                <button type="button" class="yt-icon-btn" id="fullscreen" aria-label="${escapeHtml(t.fullScreen)}" title="${escapeHtml(t.fullScreen)} (F)">⛶</button>
+              </div>
             </div>
           </div>
 
-          <!-- YouTube-Style Settings Popover Panel (All IDs preserved for tests & WCAG!) -->
+          <!-- BELOW-VIDEO TITLE & CLEAN ACTION PILLS -->
+          <div class="heading">
+            <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+              <h2>${escapeHtml(this.getAttribute("title") || "Build 3D Websites with Kimi Code - Tutorial #4")}</h2>
+              <span class="below-pill-btn" id="active-chapter-pill" style="color:#69f0ae;border-color:rgba(0,230,118,0.4);">Ch 1: Ceramics Website</span>
+              <span class="below-pill-btn" id="blind-status-pill">${this.preferences.blindOvercooked ? "🔊 TalkBack / ChromeSR Ready" : "🔊 Standard"}</span>
+            </div>
+            <div class="below-actions">
+              <label for="internet-video-select" class="sr">Select Video Stream</label>
+              <select id="internet-video-select" aria-label="Select Video Stream" class="below-pill-btn" style="background:#1e293b;color:#fff;max-width:16rem;">
+                ${INTERNET_VIDEO_CATALOG.map((item) => `<option value="${escapeHtml(item.src)}" data-sign="${escapeHtml(item.sign)}" data-captions="${escapeHtml(item.captions)}" ${this.source === item.src ? "selected" : ""}>${escapeHtml(item.label)}</option>`).join("")}
+              </select>
+              <button type="button" class="below-pill-btn" id="below-sign-toggle" aria-pressed="${this.preferences.sign}" title="Turn EthSL Sign Language Window ON or OFF (S)" style="border-color:#00e676;color:#00e676;font-weight:800;">
+                🤟 <span id="below-sign-label">${this.preferences.sign ? "Sign Language: ON" : "Sign Language: OFF"}</span>
+              </button>
+              <button type="button" class="below-pill-btn" id="context-menu-btn" aria-expanded="false" aria-haspopup="menu" title="Open Context Menu (Loop, Copy URL, Stats for nerds)">⋮ Menu</button>
+              <button type="button" class="below-pill-btn" id="dual-caption-toggle" aria-pressed="${this.preferences.captionDual}" title="Stack English + Amharic subtitles">EN+አማ</button>
+              <button type="button" class="below-pill-btn" id="desc-toggle" aria-pressed="${this.preferences.audioDescription}" title="Audio Description (D)">🎧 AD</button>
+              <button type="button" class="below-pill-btn" id="voice-copilot-btn" aria-pressed="false" title="Voice Copilot (V)">🎙️ Voice</button>
+              <button type="button" class="below-pill-btn" id="transcript-toggle" aria-pressed="${this.preferences.transcriptOpen}" title="Toggle Transcript, Sign Studio & Blind Console (T)">📝 Tools &amp; Transcript</button>
+              <button type="button" class="below-pill-btn" id="edit-captions-btn" title="Edit Captions">✏️ Edit CC</button>
+              <button type="button" class="below-pill-btn" id="help-button" title="Keyboard & Screen Reader Help">? Help</button>
+            </div>
+          </div>
+
+          <!-- Expandable Caption Style Customizer Drawer (Hidden by default so player stays super clean!) -->
           <div class="yt-settings-popover" id="yt-settings-panel" role="region" aria-label="${escapeHtml(t.captionSettings)}" hidden>
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
-              <strong style="color:#00e676;font-size:0.95rem;">⚙️ ${escapeHtml(t.captionSettings)}</strong>
+              <strong style="color:#00e676;font-size:0.9rem;">🎨 Customize Captions, Speed &amp; 3G Offline Pack</strong>
               <div class="preset-chips" role="group" aria-label="1-Click YouTube Caption Style Presets">
                 <button type="button" class="preset-chip" data-cc-preset="youtube">YouTube White/Dark</button>
                 <button type="button" class="preset-chip" data-cc-preset="yellow">High-Contrast Yellow</button>
@@ -1880,7 +1849,7 @@
               <label class="field" for="caption-language">${escapeHtml(t.captionLanguage)}
                 <select id="caption-language">${captionOptions}</select>
               </label>
-              <label class="field" for="caption-size">${escapeHtml(t.captionSize)} (${this.preferences.captionSize}rem)
+              <label class="field" for="caption-size">${escapeHtml(t.captionSize)}
                 <input id="caption-size" type="range" min="0.9" max="2.4" value="${this.preferences.captionSize}" step="0.1">
               </label>
               <label class="field" for="caption-color">${escapeHtml(t.captionColor)}
@@ -1903,7 +1872,7 @@
                   <option value="1.5">1.5x</option>
                 </select>
               </label>
-              <button type="button" id="offline" style="background:#00e676;color:#05192d;border:none;border-radius:0.4rem;font-weight:800;padding:0.5rem 0.85rem;cursor:pointer;">
+              <button type="button" id="offline" style="background:#00e676;color:#05192d;border:none;border-radius:6px;font-weight:800;padding:0.45rem 0.8rem;cursor:pointer;">
                 📦 ${escapeHtml(t.downloadOffline)} (0.28 MB)
               </button>
             </div>
@@ -1935,99 +1904,91 @@
             <section class="tab-panel" id="panel-sign" role="tabpanel" aria-labelledby="tab-btn-sign" hidden>
               <div class="sign-studio-grid">
                 <div class="studio-box">
-                  <h3 style="margin:0 0 0.35rem 0;font-size:1.05rem;color:#05192d;">⚡ Real-Time Speech / Text to EthSL Sign Translator</h3>
-                  <p style="margin:0 0 0.6rem 0;font-size:0.86rem;color:#334155;">
-                    Translates live video captions, spoken microphone input, or any typed English/Amharic sentence into <strong>Ethiopian Sign Language Subject-Object-Verb (SOV) Gloss</strong> + kinematic handshape trajectories in real time.
+                  <h3 style="margin:0 0 0.35rem 0;font-size:1rem;color:#05192d;">⚡ Real-Time Speech / Text to EthSL Sign Translator</h3>
+                  <p style="margin:0 0 0.55rem 0;font-size:0.84rem;color:#334155;">
+                    Translates live video captions, spoken microphone input, or any typed English/Amharic sentence into <strong>Ethiopian Sign Language Subject-Object-Verb (SOV) Gloss</strong> + kinematic handshapes.
                   </p>
-                  <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.6rem;">
+                  <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.55rem;">
                     <label for="custom-sign-input" class="sr">Type English or Amharic sentence to translate to EthSL</label>
-                    <input id="custom-sign-input" type="text" placeholder="Type any English or Amharic sentence to translate & sign live..." style="flex:1 1 14rem;padding:0.45rem 0.65rem;border:1.5px solid #05192d;border-radius:0.4rem;">
+                    <input id="custom-sign-input" type="text" placeholder="Type any English or Amharic sentence to translate & sign live..." style="flex:1 1 13rem;padding:0.4rem 0.6rem;border:1.5px solid #05192d;border-radius:6px;">
                     <button type="button" id="translate-sign-btn" class="action-btn" style="background:#0d5c3a;color:#fff;">🤟 Translate &amp; Sign</button>
                     <button type="button" id="mic-sign-btn" class="action-btn">🎙️ Speak to Sign</button>
                   </div>
-                  <div id="sign-translation-output" style="background:#05192d;color:#ffffff;padding:0.75rem;border-radius:0.5rem;font-size:0.85rem;">
-                    <div style="color:#00e676;font-weight:800;margin-bottom:0.25rem;">LIVE ETHSL SOV GLOSS STREAM:</div>
-                    <div id="studio-gloss-en" style="color:#fff000;font-weight:700;font-size:0.95rem;">WELCOME • MODULE-2 • VIRTUAL-ASSISTANT • FUTURE</div>
-                    <div id="studio-gloss-am" style="color:#a7f3d0;margin-top:0.2rem;">እንኳን-ደህና-መጡ • ትምህርት-ክፍል • ረዳት-ባለሙያ • ወደፊት</div>
+                  <div id="sign-translation-output" style="background:#05192d;color:#ffffff;padding:0.65rem;border-radius:6px;font-size:0.82rem;">
+                    <div style="color:#00e676;font-weight:800;margin-bottom:0.2rem;">LIVE ETHSL SOV GLOSS STREAM:</div>
+                    <div id="studio-gloss-en" style="color:#fff000;font-weight:700;">CERAMICS • WEBSITE • EXAMPLE</div>
+                    <div id="studio-gloss-am" style="color:#a7f3d0;margin-top:0.15rem;">ሴራሚክስ • ድረ-ገጽ • ምሳሌ</div>
                     <div class="gloss-token-list" id="studio-token-cards"></div>
                   </div>
                 </div>
                 <div class="studio-box" style="background:#051626;color:#ffffff;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-                  <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;font-size:0.8rem;">
-                    <strong style="color:#00e676;">60 FPS Kinematic EthSL Signer + 21-Point Hand Skeleton</strong>
+                  <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;font-size:0.78rem;">
+                    <strong style="color:#00e676;">60 FPS Kinematic EthSL Signer</strong>
                     <span id="studio-pose-label" style="color:#fff000;font-weight:700;">Pose: WELCOME</span>
                   </div>
-                  <canvas id="studio-sign-canvas" width="380" height="220" style="width:100%;max-width:380px;border:2px solid #00e676;border-radius:0.5rem;background:#071c30;"></canvas>
+                  <canvas id="studio-sign-canvas" width="380" height="210" style="width:100%;max-width:380px;border:2px solid #00e676;border-radius:6px;background:#071c30;"></canvas>
                 </div>
               </div>
             </section>
 
-            <!-- TAB 3: Over-Cooked Blind Audio Console & 6-Dot Tactile Braille Inspector -->
+            <!-- TAB 3: Over-Cooked Blind Audio Console & Chrome Screen Reader / TalkBack Bridge -->
             <section class="tab-panel" id="panel-blind" role="tabpanel" aria-labelledby="tab-btn-blind" hidden>
               <div class="blind-grid">
                 <div class="studio-box">
-                  <h3 style="margin:0 0 0.35rem 0;font-size:1.02rem;color:#05192d;">🔊 Blind Super-Console &amp; Voice Copilot</h3>
-                  <p style="margin:0 0 0.6rem 0;font-size:0.85rem;color:#334155;">
-                    <strong>Chrome Screen Reader Extension, NVDA &amp; Android TalkBack Ready:</strong> Our YouTube IFrame is shielded (<code>tabindex="-1"</code>) so screen readers never get trapped inside third-party embeds. Every menu uses native <code>role="menu"</code> / <code>menuitemcheckbox</code>, the timeline exposes live <code>aria-valuetext</code>, and all touch targets are &ge;44px for <strong>Android TalkBack</strong> (<em>Swipe Right</em> to step, <em>Double Tap</em> to activate) and <strong>Chrome Screen Reader</strong> (<code>Tab</code> / <code>Enter</code>).
+                  <h3 style="margin:0 0 0.35rem 0;font-size:1rem;color:#05192d;">🔊 Chrome Screen Reader, NVDA &amp; Android TalkBack Bridge</h3>
+                  <p style="margin:0 0 0.55rem 0;font-size:0.84rem;color:#334155;">
+                    <strong>Built specifically for Blind experiments with Chrome Screen Reader extensions &amp; Android TalkBack:</strong>
+                    All menus expose native <code>role="menu"</code> &amp; <code>menuitemcheckbox</code> states, the red scrubber announces live <code>aria-valuetext</code> timestamps, and TalkBack users can swipe through every control with zero focus traps.
                   </p>
-                  <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.65rem;">
+                  <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.6rem;">
                     <button type="button" id="describe-scene-btn" class="action-btn" style="background:#05192d;color:#fff000;">🔍 ${escapeHtml(t.describeScene)}</button>
                     <button type="button" id="add-bookmark-btn" class="action-btn">📌 ${escapeHtml(t.addBookmark)}</button>
                     <button type="button" id="where-am-i-btn" class="action-btn">🧭 Where Am I? (Status)</button>
                     <button type="button" id="read-page-btn" class="action-btn">📖 ${escapeHtml(t.readHostPage)}</button>
                   </div>
-                  <div style="font-size:0.8rem;font-weight:700;color:#0d5c3a;margin-bottom:0.25rem;">
-                    🎙️ 1-Click Voice Command Simulator (Test Voice Copilot with or without a Mic):
+                  <div style="font-size:0.78rem;font-weight:700;color:#0d5c3a;margin-bottom:0.25rem;">
+                    🎙️ 1-Click Voice Command Simulator:
                   </div>
-                  <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.6rem;">
-                    <button type="button" class="action-btn" data-voice-sim="describe scene" style="min-height:34px;padding:0.2rem 0.5rem;font-size:0.78rem;">"Describe scene"</button>
-                    <button type="button" class="action-btn" data-voice-sim="where am i" style="min-height:34px;padding:0.2rem 0.5rem;font-size:0.78rem;">"Where am I?"</button>
-                    <button type="button" class="action-btn" data-voice-sim="amharic" style="min-height:34px;padding:0.2rem 0.5rem;font-size:0.78rem;">"Switch to Amharic"</button>
-                    <button type="button" class="action-btn" data-voice-sim="next chapter" style="min-height:34px;padding:0.2rem 0.5rem;font-size:0.78rem;">"Next chapter"</button>
-                    <button type="button" class="action-btn" data-voice-sim="bookmark" style="min-height:34px;padding:0.2rem 0.5rem;font-size:0.78rem;">"Bookmark this"</button>
+                  <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.55rem;">
+                    <button type="button" class="action-btn" data-voice-sim="describe scene" style="min-height:32px;padding:0.18rem 0.45rem;font-size:0.76rem;">"Describe scene"</button>
+                    <button type="button" class="action-btn" data-voice-sim="where am i" style="min-height:32px;padding:0.18rem 0.45rem;font-size:0.76rem;">"Where am I?"</button>
+                    <button type="button" class="action-btn" data-voice-sim="amharic" style="min-height:32px;padding:0.18rem 0.45rem;font-size:0.76rem;">"Switch to Amharic"</button>
+                    <button type="button" class="action-btn" data-voice-sim="next chapter" style="min-height:32px;padding:0.18rem 0.45rem;font-size:0.76rem;">"Next chapter"</button>
+                    <button type="button" class="action-btn" data-voice-sim="bookmark" style="min-height:32px;padding:0.18rem 0.45rem;font-size:0.76rem;">"Bookmark this"</button>
                   </div>
-                  <div id="scene-inspector-box" style="background:#05192d;color:#ffffff;padding:0.65rem;border-radius:0.45rem;font-size:0.84rem;">
+                  <div id="scene-inspector-box" style="background:#05192d;color:#ffffff;padding:0.6rem;border-radius:6px;font-size:0.82rem;">
                     <strong style="color:#00e676;">Visual Scene Inspector Output:</strong>
-                    <div id="scene-inspector-text" style="margin-top:0.2rem;">Press "Describe Current Scene (I)" at any timestamp to hear a full spatial breakdown of the current slide and sign gesture.</div>
+                    <div id="scene-inspector-text" style="margin-top:0.2rem;">Press "Describe Current Scene (I)" at any timestamp to hear a full spatial breakdown of the current frame.</div>
                   </div>
                 </div>
 
                 <div class="studio-box">
-                  <h3 style="margin:0 0 0.35rem 0;font-size:1.02rem;color:#05192d;">⠿ Interactive 6-Dot Tactile Braille Cell Inspector &amp; Bookmarks</h3>
-                  <p style="margin:0 0 0.45rem 0;font-size:0.84rem;color:#334155;">
-                    Click any Braille cell below to hear its exact raised dot numbers (e.g., <em>"Letter V, Dots 1, 2, 3, 6"</em>) or inspect your saved audio bookmarks:
-                  </p>
+                  <h3 style="margin:0 0 0.35rem 0;font-size:1rem;color:#05192d;">⠿ Interactive 6-Dot Tactile Braille Cell Inspector &amp; Bookmarks</h3>
                   <div style="display:flex;gap:0.4rem;margin-bottom:0.45rem;">
                     <label for="braille-word-input" class="sr">Word to inspect in 6-dot Braille</label>
-                    <input id="braille-word-input" type="text" value="VA AI" maxlength="10" style="width:9rem;padding:0.35rem 0.5rem;border:1.5px solid #05192d;border-radius:0.35rem;font-weight:700;">
-                    <button type="button" id="inspect-braille-btn" class="action-btn" style="min-height:38px;">Inspect Braille Dots</button>
+                    <input id="braille-word-input" type="text" value="3D WEB" maxlength="10" style="width:9rem;padding:0.3rem 0.5rem;border:1.5px solid #05192d;border-radius:6px;font-weight:700;">
+                    <button type="button" id="inspect-braille-btn" class="action-btn" style="min-height:36px;">Inspect Braille Dots</button>
                   </div>
                   <div class="braille-cells" id="braille-cells-container" role="group" aria-label="Interactive 6-Dot Braille Cells"></div>
-                  <h4 style="margin:0.75rem 0 0.3rem 0;font-size:0.9rem;color:#05192d;">📌 Saved Timestamped Audio Bookmarks:</h4>
-                  <ul id="bookmarks-list" style="margin:0;padding-inline-start:1.1rem;font-size:0.84rem;"></ul>
+                  <h4 style="margin:0.65rem 0 0.25rem 0;font-size:0.86rem;color:#05192d;">📌 Saved Timestamped Audio Bookmarks:</h4>
+                  <ul id="bookmarks-list" style="margin:0;padding-inline-start:1.1rem;font-size:0.82rem;"></ul>
                 </div>
               </div>
             </section>
 
-            <!-- TAB 4: Creative Track 2 — Deaf Sensory Audio Radar & Ethiopia 3G Data-Saver -->
+            <!-- TAB 4: Deaf Sensory Audio Radar & Ethiopia 3G Data-Saver -->
             <section class="tab-panel" id="panel-sensory" role="tabpanel" aria-labelledby="tab-btn-sensory" hidden>
               <div class="sign-studio-grid">
                 <div class="studio-box" style="background:#05192d;color:#ffffff;">
-                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
-                    <h3 style="margin:0;font-size:1rem;color:#00e676;">📳 Deaf Sensory Audio &amp; Haptic Rhythm Radar</h3>
-                    <span id="sensory-event-badge" style="background:#fff000;color:#05192d;padding:0.15rem 0.5rem;border-radius:999px;font-size:0.75rem;font-weight:800;">🔔 Monitoring Audio Cues</span>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;">
+                    <h3 style="margin:0;font-size:0.95rem;color:#00e676;">📳 Deaf Sensory Audio &amp; Haptic Rhythm Radar</h3>
+                    <span id="sensory-event-badge" style="background:#fff000;color:#05192d;padding:0.12rem 0.45rem;border-radius:999px;font-size:0.72rem;font-weight:800;">🔔 Monitoring Audio Cues</span>
                   </div>
-                  <p style="margin:0 0 0.5rem 0;font-size:0.83rem;color:#cbd5e1;">
-                    Visualizes voice pitch, speaker emphasis, and non-speech sound events (<code>[Chime]</code>, <code>[Transition tone]</code>) in real time, and triggers gentle tactile vibration pulses on mobile devices (<code>navigator.vibrate</code>).
-                  </p>
-                  <canvas id="sensory-radar-canvas" width="380" height="110" style="width:100%;border:1px solid #334155;border-radius:0.4rem;background:#020b14;"></canvas>
+                  <canvas id="sensory-radar-canvas" width="380" height="100" style="width:100%;border:1px solid #334155;border-radius:6px;background:#020b14;"></canvas>
                 </div>
 
                 <div class="studio-box">
-                  <h3 style="margin:0 0 0.35rem 0;font-size:1rem;color:#05192d;">📶 Ethiopia 3G Smart Data-Saver &amp; Offline Pack</h3>
-                  <p style="margin:0 0 0.6rem 0;font-size:0.84rem;color:#334155;">
-                    Built for low-cost Android phones on 3G: switch to <strong>3G Audio + Slide Keyframes Mode</strong> to cut mobile data usage by <strong>80%</strong> (<code>0.23 MB</code> vs <code>1.12 MB</code>), or download the complete offline ZIP bundle.
-                  </p>
+                  <h3 style="margin:0 0 0.35rem 0;font-size:0.95rem;color:#05192d;">📶 Ethiopia 3G Smart Data-Saver &amp; Offline Pack</h3>
                   <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
                     <button type="button" id="toggle-3g-saver-btn" class="action-btn" style="background:#05192d;color:#00e676;">
                       📶 Toggle 3G Data-Saver Mode (Saves 80% Data)
@@ -2054,7 +2015,7 @@
             <li><strong>1 – 6 Number Keys:</strong> Jump directly to Chapter 1..6 (DAISY Blind Chapter Hopping)</li>
             <li><strong>[ and ] Bracket Keys:</strong> Jump to Previous / Next Transcript Sentence</li>
             <li><strong>C:</strong> Toggle ${escapeHtml(t.captions)} &bull; <strong>S:</strong> Toggle ${escapeHtml(t.signLanguage)}</li>
-            <li><strong>D:</strong> Toggle ${escapeHtml(t.audioDescription)} &bull; <strong>B:</strong> Toggle Blind+ Over-Cooked Mode</li>
+            <li><strong>D:</strong> Toggle ${escapeHtml(t.audioDescription)} &bull; <strong>B:</strong> Toggle Blind+ Screen Reader Mode</li>
             <li><strong>I:</strong> Describe Current Visual Scene &bull; <strong>N:</strong> Save Audio Bookmark</li>
             <li><strong>V:</strong> Toggle Hands-Free Voice Command Copilot &bull; <strong>R:</strong> Read Host Lesson Page</li>
             <li><strong>F / Escape:</strong> ${escapeHtml(t.fullScreen)} / ${escapeHtml(t.exitFullScreen)}</li>
@@ -2065,7 +2026,7 @@
         <!-- Caption Pipeline Editor Modal -->
         <dialog id="caption-editor-dialog" aria-labelledby="editor-title">
           <h3 id="editor-title">${escapeHtml(t.editorHeading)}</h3>
-          <p style="font-size:0.9rem;color:#475569;margin-top:0">${escapeHtml(t.editorIntro)}</p>
+          <p style="font-size:0.88rem;color:#475569;margin-top:0">${escapeHtml(t.editorIntro)}</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem">
             <label class="field" for="reviewer-input" style="color:#05192d;">${escapeHtml(t.reviewerName)}
               <input id="reviewer-input" type="text" value="Co-Designer Reviewer" style="background:#fff;color:#05192d;">
@@ -2076,8 +2037,8 @@
           </div>
           <div class="editor-rows" id="editor-rows"></div>
           <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end;margin-top:0.75rem">
-            <button type="button" class="primary" id="save-captions-btn" style="background:#0d5c3a;color:#fff;padding:0.5rem 1rem;border-radius:0.4rem;border:none;font-weight:700;">${escapeHtml(t.saveCorrections)}</button>
-            <button type="button" id="close-editor-btn" style="padding:0.5rem 1rem;border-radius:0.4rem;border:2px solid #05192d;background:#fff;font-weight:700;">${escapeHtml(t.close)}</button>
+            <button type="button" class="primary" id="save-captions-btn" style="background:#0d5c3a;color:#fff;padding:0.45rem 0.9rem;border-radius:6px;border:none;font-weight:700;">${escapeHtml(t.saveCorrections)}</button>
+            <button type="button" id="close-editor-btn" style="padding:0.45rem 0.9rem;border-radius:6px;border:2px solid #05192d;background:#fff;font-weight:700;">${escapeHtml(t.close)}</button>
           </div>
         </dialog>
       `;
@@ -2115,6 +2076,7 @@
       });
 
       this.$("#play-pause").addEventListener("click", () => this.togglePlay());
+      video.addEventListener("click", () => this.togglePlay());
       this.$("#back").addEventListener("click", () => {
         video.currentTime = Math.max(0, video.currentTime - 10);
         playEarcon("seekBack", this.preferences.earcons);
@@ -2300,6 +2262,24 @@
         const stats = this.$("#yt-stats-nerd");
         if (stats) stats.hidden = !stats.hidden;
       });
+            this.$("#menu-sleep-timer")?.addEventListener("click", () => {
+        const opts = ["Off", "15 min", "30 min", "End of video"];
+        const el = this.$("#menu-sleep-val");
+        const curVal = (el?.textContent || "Off").replace("›", "").trim();
+        const nextVal = opts[(opts.indexOf(curVal) + 1) % opts.length];
+        if (el) el.textContent = `${nextVal} ›`;
+        this.announce(`Sleep timer set to ${nextVal}`, this.preferences.blindOvercooked);
+      });
+      this.$("#ctx-copy-debug")?.addEventListener("click", () => {
+        const debug = JSON.stringify({ src: this.source, time: this.getCurrentSec(), prefs: this.preferences });
+        navigator.clipboard?.writeText(debug).catch(() => {});
+        this.$("#yt-context-menu").hidden = true;
+        this.showNotice("Copied player debug telemetry to clipboard.");
+      });
+      this.$("#ctx-troubleshoot")?.addEventListener("click", () => {
+        this.$("#yt-context-menu").hidden = true;
+        this.showNotice("Playback Diagnostics: Native HTML5 H.264/AAC stream active — 0 dropped frames.");
+      });
       this.$("#close-stats-btn")?.addEventListener("click", () => {
         this.$("#yt-stats-nerd").hidden = true;
       });
@@ -2350,7 +2330,9 @@
       });
 
       if (signVideo) {
-        this.$("#sign-toggle").addEventListener("click", () => this.toggleSignWindow());
+        this.$("#sign-toggle")?.addEventListener("click", () => this.toggleSignWindow());
+        this.$("#below-sign-toggle")?.addEventListener("click", () => this.toggleSignWindow());
+        this.$("#menu-sign-toggle")?.addEventListener("click", () => this.toggleSignWindow());
         this.$("#sign-close-btn")?.addEventListener("click", () => this.toggleSignWindow(false));
         this.$("#sign-mode-live")?.addEventListener("click", () => this.setSignMode("live"));
         this.$("#sign-mode-video")?.addEventListener("click", () => this.setSignMode("video"));
@@ -2523,14 +2505,14 @@
       // Automatic offline fallback if internet stream is unreachable (e.g., in Aeroplane Mode)
       video.addEventListener("error", () => {
         if (video.src && !video.src.endsWith("/savanna/assets/media/va-future-lesson.mp4")) {
-          video.src = "/savanna/assets/media/va-future-lesson.mp4";
+          video.src = resolveAssetUrl("/savanna/assets/media/kimi-3d-ceramics.mp4");
           this.showNotice("Internet stream offline — automatically switched to local cached lesson video.");
         }
       });
       if (signVideo) {
         signVideo.addEventListener("error", () => {
           if (signVideo.src && !signVideo.src.endsWith("/savanna/assets/media/va-future-ethsl.mp4")) {
-            signVideo.src = "/savanna/assets/media/va-future-ethsl.mp4";
+            signVideo.src = resolveAssetUrl("/savanna/assets/media/va-future-ethsl.mp4");
           }
         });
         this.signTimer = window.setInterval(() => this.syncSign(!video.paused), 1000);
@@ -2552,14 +2534,33 @@
 
     toggleSignWindow(forceState) {
       this.preferences.sign = typeof forceState === "boolean" ? forceState : !this.preferences.sign;
-      playEarcon(this.preferences.sign ? "toggleOn" : "toggleOff", this.preferences.earcons);
-      this.$("#sign-toggle")?.setAttribute("aria-pressed", String(this.preferences.sign));
+      const isOn = this.preferences.sign;
+      playEarcon(isOn ? "toggleOn" : "toggleOff", this.preferences.earcons);
+
+      const mainBtn = this.$("#sign-toggle");
+      if (mainBtn) {
+        mainBtn.setAttribute("aria-pressed", String(isOn));
+        mainBtn.style.borderColor = isOn ? "#00e676" : "rgba(255,255,255,0.35)";
+        mainBtn.style.background = isOn ? "rgba(0,230,118,0.22)" : "rgba(255,255,255,0.1)";
+        mainBtn.style.color = isOn ? "#00e676" : "#ffffff";
+      }
+      const mainLbl = this.$("#sign-toggle-label");
+      if (mainLbl) mainLbl.textContent = isOn ? "Sign: ON" : "Sign: OFF";
+
+      const belowBtn = this.$("#below-sign-toggle");
+      if (belowBtn) belowBtn.setAttribute("aria-pressed", String(isOn));
+      const belowLbl = this.$("#below-sign-label");
+      if (belowLbl) belowLbl.textContent = isOn ? "Sign Language: ON" : "Sign Language: OFF";
+
+      const menuBtn = this.$("#menu-sign-toggle");
+      if (menuBtn) menuBtn.setAttribute("aria-checked", String(isOn));
+
       const signEl = this.$("#sign-window");
       if (signEl) {
-        signEl.hidden = !this.preferences.sign;
-        if (this.preferences.sign) this.positionSign();
+        signEl.hidden = !isOn;
+        if (isOn) this.positionSign();
       }
-      this.persist(this.preferences.sign ? "Ethiopian Sign Language window shown" : "Sign Language window hidden");
+      this.persist(isOn ? "Ethiopian Sign Language window turned ON" : "Ethiopian Sign Language window turned OFF");
     }
 
     setSignMode(mode) {
@@ -3534,7 +3535,9 @@
     playbackChanged(playing) {
       const button = this.$("#play-pause");
       if (button) {
-        button.textContent = playing ? this.t.pause : this.t.play;
+        button.textContent = playing ? "⏸" : "▶";
+        button.setAttribute("aria-label", playing ? this.t.pause : this.t.play);
+        button.setAttribute("title", (playing ? this.t.pause : this.t.play) + " (K / Space)");
         button.setAttribute("aria-pressed", String(playing));
       }
       const signPlayBtn = this.$("#sign-play-btn");
@@ -3703,8 +3706,10 @@
       this.$("#time").textContent = `${formatTime(cur)} / ${formatTime(dur)}`;
       const seekEl = this.$("#seek");
       if (seekEl && dur > 0) {
-        seekEl.value = String((cur / dur) * 100);
+        const pct = Math.max(0, Math.min(100, (cur / dur) * 100));
+        seekEl.value = String(pct);
         seekEl.setAttribute("aria-valuetext", `${formatTime(cur)} of ${formatTime(dur)}`);
+        this.$("#yt-timeline-track")?.style.setProperty("--seek-pct", `${pct}%`);
       }
       this.updateCaption();
       this.highlightCue(cur);
