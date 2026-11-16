@@ -6,6 +6,7 @@ Run with:
 
 from __future__ import annotations
 
+import asyncio
 import io
 import sys
 import unittest
@@ -18,18 +19,21 @@ if str(REPO_ROOT) not in sys.path:
 
 from api.app.main import (
     AccommodationRequest,
+    SignTranslationRequest,
     WebhookRegistration,
     build_offline_pack_zip,
+    create_lesson,
     get_certificate,
     get_job,
-    create_lesson,
     get_lesson,
-    list_lessons,
+    get_sign_dictionary,
     get_transcript,
+    list_lessons,
     parse_vtt,
     register_webhook,
     request_job_accommodation,
     text_to_braille_ascii,
+    translate_sign_endpoint,
 )
 
 
@@ -44,6 +48,32 @@ class Track2PluginTests(unittest.TestCase):
         res = get_transcript("va-future", lang="am")
         self.assertEqual(res["language"], "am")
         self.assertIn("ሞጁል", res["cues"][0]["text"])
+
+    def test_real_time_ethsl_sign_translation_en_and_am(self) -> None:
+        en_res = translate_sign_endpoint(
+            SignTranslationRequest(
+                text="[Introductory chime] Welcome to the future of Virtual Assistant work in Ethiopia",
+                language="en",
+            )
+        )
+        self.assertIn("Introductory chime", en_res["sound_cues"])
+        self.assertIn("VIRTUAL-DIGITAL", en_res["gloss_string_en"])
+        self.assertIn("ETHIOPIA", en_res["gloss_string_en"])
+        # Verify SOV reordering places verb WELCOME at the end of the clause
+        self.assertTrue(en_res["gloss_string_en"].endswith("WELCOME") or "WELCOME" in en_res["gloss_string_en"])
+
+        am_res = translate_sign_endpoint(
+            SignTranslationRequest(
+                text="እንኳን ወደ ቨርቹዋል ረዳት ሥራ በኢትዮጵያ በደህና መጡ",
+                language="am",
+            )
+        )
+        self.assertIn("ኢትዮጵያ", am_res["gloss_string_am"])
+        self.assertGreaterEqual(len(am_res["gloss_sequence"]), 3)
+
+        dict_res = get_sign_dictionary()
+        self.assertGreaterEqual(dict_res["count"], 15)
+        self.assertIn("ethiopia", dict_res["signs"])
 
     def test_braille_brf_38_cell_line_wrapping(self) -> None:
         sample = "Accessible learning media for everyone in Ethiopia with Braille export."
@@ -83,7 +113,6 @@ class Track2PluginTests(unittest.TestCase):
         )
         self.assertEqual(resp.status_code, 201)
 
-
     def test_list_lessons_and_html_h1_tutorial(self) -> None:
         lessons = list_lessons()
         lesson_ids = {l["id"] for l in lessons}
@@ -94,18 +123,20 @@ class Track2PluginTests(unittest.TestCase):
         self.assertIsNotNone(h1_lesson["sign"], "EthSL sign video must be present")
 
     def test_create_lesson_dual_video_sync(self) -> None:
-        import asyncio
-        resp = asyncio.run(create_lesson(
-            title="Introduction to HTML Divs",
-            lesson_id="html-div-intro",
-            video_url="/savanna/assets/media/va-future-lesson.mp4",
-            sign_url="/savanna/assets/media/va-future-ethsl.mp4"
-        ))
+        resp = asyncio.run(
+            create_lesson(
+                title="Introduction to HTML Divs",
+                lesson_id="html-div-intro",
+                video_url="/savanna/assets/media/va-future-lesson.mp4",
+                sign_url="/savanna/assets/media/va-future-ethsl.mp4",
+            )
+        )
         self.assertEqual(resp.status_code, 201)
         data = get_lesson("html-div-intro")
         self.assertEqual(data["title"], "Introduction to HTML Divs")
         self.assertIn("va-future-lesson.mp4", data["video"])
         self.assertIn("va-future-ethsl.mp4", data["sign"])
+
 
 if __name__ == "__main__":
     unittest.main()

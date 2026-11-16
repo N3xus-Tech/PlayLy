@@ -26,6 +26,10 @@ from .lessons import (
     time_to_seconds,
     transcript_text,
 )
+from .sign_translator import (
+    ETHSL_LEXICON,
+    translate_to_ethsl_gloss,
+)
 from .webhooks import (
     fire_webhooks,
     list_webhooks,
@@ -51,6 +55,8 @@ __all__ = [
     "build_offline_pack_zip",
     "save_caption_correction",
     "save_lesson",
+    "ETHSL_LEXICON",
+    "translate_to_ethsl_gloss",
     "fire_webhooks",
     "list_webhooks",
     "register_webhook",

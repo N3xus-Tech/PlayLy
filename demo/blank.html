@@ -7,7 +7,7 @@
   <!-- 1. Load the module with a single script tag (zero Bootstrap, zero Savanna CSS) -->
   <script src="/module/db-player.js" defer></script>
 </head>
-<body style="max-width: 64rem; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; color: #101828; background: #ffffff;">
+<body style="max-width: 66rem; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; color: #101828; background: #ffffff;">
   <header style="margin-bottom: 1.5rem; border-bottom: 2px solid #05192d; padding-bottom: 1rem;">
     <h1 style="margin: 0 0 0.5rem 0; color: #05192d;">External Host Proof (<code>demo/blank.html</code>)</h1>
     <p style="margin: 0; color: #334155;">
@@ -20,10 +20,9 @@
     </div>
   </header>
 
-  <main>
-    <!-- 2. Place the accessible media player -->
-    <p style="margin: 0.5rem 0 1rem 0; font-size: 0.9rem; color: #0d5c3a; font-weight: 600;">
-      🤟 Synchronized Ethiopian Sign Language (EthSL) prerecorded video player (WCAG 1.2.6 AAA human interpretation video, not AI-supported sign translation).
+  <main id="curriculum_navigation_content">
+    <p style="margin: 0.5rem 0 1rem 0; font-size: 0.92rem; color: #0d5c3a; font-weight: 700;">
+      🤟 Dual-Engine Sign Language Window (Switch between <strong>⚡ Live Real-Time EthSL SOV Gloss + 21-Point Kinematic Signer</strong> and <strong>🎥 Synchronized Human Video PiP</strong>) &bull; 🎬 YouTube-Grade Interactive Bilingual Captions &bull; 🔊 Over-Cooked Blind Mode (Spatial Earcons, Voice Copilot, Scene Inspector <code>I</code>, DAISY Chapter Hopping <code>1–6</code>, 6-Dot Tactile Braille) &bull; 📳 Deaf Audio Radar &amp; 3G Data-Saver.
     </p>
     <db-player
       id="demo-player"
@@ -47,7 +46,6 @@
     </section>
   </main>
 
-  <!-- 3. Optionally listen to plugin events -->
   <script>
     const log = document.getElementById("event-log");
     ["db-player:prefs", "db-player:complete", "db-job-card:accommodation-requested"].forEach((evtName) => {

@@ -2,6 +2,7 @@
 
 Exposes Level 2 REST API endpoints (/api/v1/*), interactive Swagger UI (/docs),
 lightweight 3G offline pack builder (audio + bilingual HTML + VTT + .brf Braille, excluding heavy video),
+real-time Ethiopian Sign Language (EthSL) SOV gloss & kinematic translation engine,
 caption correction pipeline, accessible career gateway with Schema.org JobPosting metadata,
 Open Badges 3.0 cryptographic signature verification (valid & invalid states), and host webhooks.
 """
@@ -24,20 +25,24 @@ from .core.config import (
     WEBHOOKS_FILE,
 )
 from .routers import (
+    SignTranslationRequest,
     certificates_router,
+    create_lesson,
     get_certificate,
     get_job,
-    create_lesson,
     get_lesson,
-    list_lessons,
+    get_sign_dictionary,
     get_transcript,
     jobs_router,
     lessons_router,
     list_jobs,
+    list_lessons,
     list_webhooks,
     offline_pack,
     register_webhook,
     request_job_accommodation,
+    sign_router,
+    translate_sign_endpoint,
     upload_caption_correction,
     verify_certificate_page,
     webhooks_router,
@@ -70,6 +75,10 @@ from .services.lessons import (
     time_to_seconds,
     transcript_text,
 )
+from .services.sign_translator import (
+    ETHSL_LEXICON,
+    translate_to_ethsl_gloss,
+)
 from .services.webhooks import (
     fire_webhooks,
 )
@@ -78,11 +87,11 @@ app = FastAPI(
     title="Savanna Accessible Learning Media Plugin API",
     description=(
         "Level 2 & Level 3 REST API for the Digital Bridge Track 2 Accessible Learning Media Plugin. "
-        "Serves lesson metadata, parsed bilingual transcripts, ultra-light 3G offline packs (<300 KB), "
-        "caption correction workflows, accessible career gateway listings with Schema.org JobPosting, "
-        "Open Badges 3.0 cryptographic verification, and host platform webhooks."
+        "Serves lesson metadata, parsed bilingual transcripts, real-time EthSL sign language translation, "
+        "ultra-light 3G offline packs (<300 KB), caption correction workflows, accessible career gateway "
+        "listings with Schema.org JobPosting, Open Badges 3.0 cryptographic verification, and host webhooks."
     ),
-    version="2.0.0",
+    version="2.1.0",
 )
 
 app.add_middleware(
@@ -110,6 +119,7 @@ def health_check() -> dict[str, str]:
 
 # Include decoupled routers
 app.include_router(lessons_router)
+app.include_router(sign_router)
 app.include_router(jobs_router)
 app.include_router(certificates_router)
 app.include_router(webhooks_router)
@@ -137,21 +147,26 @@ app.mount("/documents", StaticFiles(directory=REPOSITORY_ROOT / "documents", htm
 app.mount("/", StaticFiles(directory=REPOSITORY_ROOT, html=True), name="root")
 
 __all__ = [
-    # FastAPI Application
     "app",
     "handle_head_requests",
     "health_check",
     "root_redirect",
-    # Routers
     "lessons_router",
+    "sign_router",
     "jobs_router",
     "certificates_router",
     "webhooks_router",
-    # Route Handlers
     "get_lesson",
+    "list_lessons",
+    "create_lesson",
     "get_transcript",
     "offline_pack",
     "upload_caption_correction",
+    "SignTranslationRequest",
+    "translate_sign_endpoint",
+    "get_sign_dictionary",
+    "translate_to_ethsl_gloss",
+    "ETHSL_LEXICON",
     "list_jobs",
     "get_job",
     "request_job_accommodation",
@@ -159,7 +174,6 @@ __all__ = [
     "verify_certificate_page",
     "register_webhook",
     "list_webhooks",
-    # Config & Constants
     "REPOSITORY_ROOT",
     "API_DIRECTORY",
     "DATA_DIRECTORY",
@@ -170,11 +184,9 @@ __all__ = [
     "CERTIFICATE_SECRET",
     "ISSUED_CREDENTIALS",
     "JOBS",
-    # Schemas & Models
     "CaptionCorrection",
     "AccommodationRequest",
     "WebhookRegistration",
-    # Service Functions
     "load_lessons",
     "get_lesson_or_404",
     "get_job_or_404",
@@ -185,6 +197,7 @@ __all__ = [
     "text_to_braille_ascii",
     "build_offline_pack_zip",
     "save_caption_correction",
+    "save_lesson",
     "make_certificate",
     "verify_certificate_signature",
     "render_certificate_html",

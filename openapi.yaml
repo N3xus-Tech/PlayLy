@@ -1,12 +1,12 @@
-openapi: 3.1.0
+openapi: 3.0.2
 info:
   title: Savanna Accessible Learning Media Plugin API
   description: Level 2 & Level 3 REST API for the Digital Bridge Track 2 Accessible
-    Learning Media Plugin. Serves lesson metadata, parsed bilingual transcripts, ultra-light
-    3G offline packs (<300 KB), caption correction workflows, accessible career gateway
-    listings with Schema.org JobPosting, Open Badges 3.0 cryptographic verification,
-    and host platform webhooks.
-  version: 2.0.0
+    Learning Media Plugin. Serves lesson metadata, parsed bilingual transcripts, real-time
+    EthSL sign language translation, ultra-light 3G offline packs (<300 KB), caption
+    correction workflows, accessible career gateway listings with Schema.org JobPosting,
+    Open Badges 3.0 cryptographic verification, and host webhooks.
+  version: 2.1.0
 paths:
   /healthz:
     get:
@@ -20,10 +20,100 @@ paths:
           content:
             application/json:
               schema:
+                title: Response Health Check Healthz Get
+                type: object
                 additionalProperties:
                   type: string
-                type: object
-                title: Response Health Check Healthz Get
+  /api/v1/lessons:
+    get:
+      tags:
+      - lessons
+      summary: List Lessons
+      description: Lists all published tutorial lessons.
+      operationId: list_lessons_api_v1_lessons_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response List Lessons Api V1 Lessons Get
+                type: array
+                items:
+                  type: object
+    post:
+      tags:
+      - lessons
+      summary: Create Lesson
+      description: 'Uploads or registers a new tutorial lesson with dual synchronized
+        videos:
+
+        1. Main Course Video (the tutorial / lecture)
+
+        2. EthSL Sign Language Video (authentic human interpretation)
+
+        Both play in exact lockstep synchronization in <db-player>.'
+      operationId: create_lesson_api_v1_lessons_post
+      parameters:
+      - required: true
+        schema:
+          title: Title
+          type: string
+        name: title
+        in: query
+      - required: false
+        schema:
+          title: Lesson Id
+          type: string
+        name: lesson_id
+        in: query
+      - required: false
+        schema:
+          title: Video Url
+          type: string
+        name: video_url
+        in: query
+      - required: false
+        schema:
+          title: Sign Url
+          type: string
+        name: sign_url
+        in: query
+      - required: false
+        schema:
+          title: Audio Url
+          type: string
+        name: audio_url
+        in: query
+      - required: false
+        schema:
+          title: Captions En Url
+          type: string
+        name: captions_en_url
+        in: query
+      - required: false
+        schema:
+          title: Captions Am Url
+          type: string
+        name: captions_am_url
+        in: query
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_lesson_api_v1_lessons_post'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/lessons/{lesson_id}:
     get:
       tags:
@@ -31,21 +121,20 @@ paths:
       summary: Get Lesson
       operationId: get_lesson_api_v1_lessons__lesson_id__get
       parameters:
-      - name: lesson_id
-        in: path
-        required: true
+      - required: true
         schema:
-          type: string
           title: Lesson Id
+          type: string
+        name: lesson_id
+        in: path
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
                 title: Response Get Lesson Api V1 Lessons  Lesson Id  Get
+                type: object
         '422':
           description: Validation Error
           content:
@@ -59,29 +148,28 @@ paths:
       summary: Get Transcript
       operationId: get_transcript_api_v1_lessons__lesson_id__transcript_get
       parameters:
-      - name: lesson_id
-        in: path
-        required: true
+      - required: true
         schema:
-          type: string
           title: Lesson Id
-      - name: lang
-        in: query
-        required: false
+          type: string
+        name: lesson_id
+        in: path
+      - required: false
         schema:
+          title: Lang
           type: string
           default: en
-          title: Lang
+        name: lang
+        in: query
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
                 title: Response Get Transcript Api V1 Lessons  Lesson Id  Transcript
                   Get
+                type: object
         '422':
           description: Validation Error
           content:
@@ -102,12 +190,12 @@ paths:
         Intentionally excludes the heavy MP4 video stream to save mobile data on 3G.'
       operationId: offline_pack_api_v1_lessons__lesson_id__offline_pack_get
       parameters:
-      - name: lesson_id
-        in: path
-        required: true
+      - required: true
         schema:
-          type: string
           title: Lesson Id
+          type: string
+        name: lesson_id
+        in: path
       responses:
         '200':
           description: Successful Response
@@ -127,18 +215,24 @@ paths:
       summary: Upload Caption Correction
       operationId: upload_caption_correction_api_v1_lessons__lesson_id__captions_post
       parameters:
-      - name: lesson_id
-        in: path
-        required: true
+      - required: true
         schema:
-          type: string
           title: Lesson Id
+          type: string
+        name: lesson_id
+        in: path
+      - required: true
+        schema:
+          title: Metadata
+          type: string
+        name: metadata
+        in: query
       requestBody:
-        required: true
         content:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/Body_upload_caption_correction_api_v1_lessons__lesson_id__captions_post'
+        required: true
       responses:
         '201':
           description: Successful Response
@@ -151,6 +245,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/sign/translate:
+    post:
+      tags:
+      - sign-language
+      summary: Translate Sign Endpoint
+      description: 'Translates live speech, caption cues, or custom text into Ethiopian
+        Sign Language (EthSL)
+
+        Subject-Object-Verb (SOV) glosses, kinematic handshapes, facial markers, and
+        fingerspelling.'
+      operationId: translate_sign_endpoint_api_v1_sign_translate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignTranslationRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Translate Sign Endpoint Api V1 Sign Translate Post
+                type: object
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/sign/dictionary:
+    get:
+      tags:
+      - sign-language
+      summary: Get Sign Dictionary
+      description: Returns the built-in Ethiopian Sign Language (EthSL) technical
+        & career vocabulary lexicon.
+      operationId: get_sign_dictionary_api_v1_sign_dictionary_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Sign Dictionary Api V1 Sign Dictionary Get
+                type: object
   /api/v1/jobs:
     get:
       tags:
@@ -158,24 +299,23 @@ paths:
       summary: List Jobs
       operationId: list_jobs_api_v1_jobs_get
       parameters:
-      - name: lang
-        in: query
-        required: false
+      - required: false
         schema:
+          title: Lang
           type: string
           default: en
-          title: Lang
+        name: lang
+        in: query
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
               schema:
+                title: Response List Jobs Api V1 Jobs Get
                 type: array
                 items:
                   type: object
-                  additionalProperties: true
-                title: Response List Jobs Api V1 Jobs Get
         '422':
           description: Validation Error
           content:
@@ -189,28 +329,27 @@ paths:
       summary: Get Job
       operationId: get_job_api_v1_jobs__job_id__get
       parameters:
-      - name: job_id
-        in: path
-        required: true
+      - required: true
         schema:
-          type: string
           title: Job Id
-      - name: lang
-        in: query
-        required: false
+          type: string
+        name: job_id
+        in: path
+      - required: false
         schema:
+          title: Lang
           type: string
           default: en
-          title: Lang
+        name: lang
+        in: query
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
                 title: Response Get Job Api V1 Jobs  Job Id  Get
+                type: object
         '422':
           description: Validation Error
           content:
@@ -224,18 +363,18 @@ paths:
       summary: Request Job Accommodation
       operationId: request_job_accommodation_api_v1_jobs__job_id__accommodations_post
       parameters:
-      - name: job_id
-        in: path
-        required: true
+      - required: true
         schema:
-          type: string
           title: Job Id
+          type: string
+        name: job_id
+        in: path
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AccommodationRequest'
+        required: true
       responses:
         '201':
           description: Successful Response
@@ -255,31 +394,26 @@ paths:
       summary: Get Certificate
       operationId: get_certificate_api_v1_certificates__credential_id__get
       parameters:
-      - name: credential_id
-        in: path
-        required: true
+      - required: true
         schema:
-          type: string
           title: Credential Id
-      - name: sig
-        in: query
-        required: false
+          type: string
+        name: credential_id
+        in: path
+      - required: false
         schema:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional signature override to test invalid/tampered proofs
           title: Sig
-        description: Optional signature override to test invalid/tampered proofs
+          type: string
+        name: sig
+        in: query
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
                 title: Response Get Certificate Api V1 Certificates  Credential Id  Get
+                type: object
         '422':
           description: Validation Error
           content:
@@ -293,22 +427,18 @@ paths:
       summary: Verify Certificate Page
       operationId: verify_certificate_page_certificates__credential_id__get
       parameters:
-      - name: credential_id
-        in: path
-        required: true
+      - required: true
         schema:
-          type: string
           title: Credential Id
-      - name: sig
-        in: query
-        required: false
+          type: string
+        name: credential_id
+        in: path
+      - required: false
         schema:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional signature override to test invalid/tampered proofs
           title: Sig
-        description: Optional signature override to test invalid/tampered proofs
+          type: string
+        name: sig
+        in: query
       responses:
         '200':
           description: Successful Response
@@ -334,11 +464,10 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  additionalProperties: true
-                  type: object
-                type: array
                 title: Response List Webhooks Api V1 Webhooks Get
+                type: array
+                items:
+                  type: object
     post:
       tags:
       - webhooks
@@ -365,86 +494,115 @@ paths:
 components:
   schemas:
     AccommodationRequest:
-      properties:
-        accommodations:
-          items:
-            type: string
-          type: array
-          minItems: 1
-          title: Accommodations
-          description: Requested interview accommodations
-        language:
-          type: string
-          pattern: ^(en|am)$
-          title: Language
-          description: Preferred communication language
-          default: en
-      type: object
+      title: AccommodationRequest
       required:
       - accommodations
-      title: AccommodationRequest
-    Body_upload_caption_correction_api_v1_lessons__lesson_id__captions_post:
+      type: object
       properties:
-        metadata:
+        accommodations:
+          title: Accommodations
+          minLength: 1
+          type: array
+          items:
+            minLength: 1
+            type: string
+          description: Requested interview accommodations
+        language:
+          title: Language
+          pattern: ^(en|am)$
           type: string
-          title: Metadata
-          description: JSON metadata for the correction
-        caption_file:
+          description: Preferred communication language
+          default: en
+    Body_create_lesson_api_v1_lessons_post:
+      title: Body_create_lesson_api_v1_lessons_post
+      type: object
+      properties:
+        video_file:
+          title: Video File
           type: string
           format: binary
-          title: Caption File
-      type: object
-      required:
-      - metadata
-      - caption_file
+        sign_file:
+          title: Sign File
+          type: string
+          format: binary
+        audio_file:
+          title: Audio File
+          type: string
+          format: binary
+    Body_upload_caption_correction_api_v1_lessons__lesson_id__captions_post:
       title: Body_upload_caption_correction_api_v1_lessons__lesson_id__captions_post
+      required:
+      - caption_file
+      type: object
+      properties:
+        caption_file:
+          title: Caption File
+          type: string
+          format: binary
     HTTPValidationError:
+      title: HTTPValidationError
+      type: object
       properties:
         detail:
+          title: Detail
+          type: array
           items:
             $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+    SignTranslationRequest:
+      title: SignTranslationRequest
+      required:
+      - text
       type: object
-      title: HTTPValidationError
-    ValidationError:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        text:
+          title: Text
+          minLength: 1
           type: string
-          title: Message
-        type:
+          description: English or Amharic sentence or caption cue to translate into
+            EthSL
+        language:
+          title: Language
           type: string
-          title: Error Type
-      type: object
+          description: Source language code ('en' or 'am')
+          default: en
+    ValidationError:
+      title: ValidationError
       required:
       - loc
       - msg
       - type
-      title: ValidationError
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
     WebhookRegistration:
+      title: WebhookRegistration
+      required:
+      - url
+      type: object
       properties:
         url:
-          type: string
           title: Url
+          type: string
           description: Target HTTPS/HTTP URL to receive webhook events
         events:
+          title: Events
+          type: array
           items:
             type: string
-          type: array
-          title: Events
           description: Subscribed event types
           default:
           - lesson.completed
           - captions.updated
           - job.accommodation_requested
-      type: object
-      required:
-      - url
-      title: WebhookRegistration

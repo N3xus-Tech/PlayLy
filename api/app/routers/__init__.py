@@ -22,6 +22,12 @@ from .lessons import (
     router as lessons_router,
     upload_caption_correction,
 )
+from .sign import (
+    SignTranslationRequest,
+    get_sign_dictionary,
+    router as sign_router,
+    translate_sign_endpoint,
+)
 from .webhooks import (
     list_webhooks,
     register_webhook,
@@ -33,6 +39,7 @@ __all__ = [
     "jobs_router",
     "certificates_router",
     "webhooks_router",
+    "sign_router",
     "list_lessons",
     "create_lesson",
     "get_lesson",
@@ -46,4 +53,7 @@ __all__ = [
     "verify_certificate_page",
     "register_webhook",
     "list_webhooks",
+    "SignTranslationRequest",
+    "translate_sign_endpoint",
+    "get_sign_dictionary",
 ]
