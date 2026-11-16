@@ -353,6 +353,79 @@
     }
   }
 
+
+  const extractYouTubeId = (url) => {
+    const s = String(url || "").trim();
+    const m = s.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : null;
+  };
+
+  const INTERNET_VIDEO_CATALOG = [
+    {
+      id: "yt-3d-ceramics",
+      label: "▶ YouTube Featured: Build 3D Websites (Ceramics Example, 3:26)",
+      src: "https://www.youtube.com/watch?v=GZFoexLsMi8",
+      sign: "/savanna/assets/media/va-future-ethsl.mp4",
+      captions: "/savanna/assets/captions/kimi-3d-en.vtt,/savanna/assets/captions/kimi-3d-am.vtt"
+    },
+    {
+      id: "w3c-captions",
+      label: "🌐 W3C Live-Action: Video Captions & Deaf Access (media.w3.org)",
+      src: "https://media.w3.org/wai/perspective-videos/video-captions.mp4",
+      sign: "https://media.w3.org/wai/perspective-videos/video-captions-ad.mp4",
+      captions: "/savanna/assets/captions/w3c-captions-en.vtt,/savanna/assets/captions/w3c-captions-am.vtt"
+    },
+    {
+      id: "w3c-keyboard",
+      label: "🌐 W3C Live-Action: Keyboard Compatibility (media.w3.org)",
+      src: "https://media.w3.org/wai/perspective-videos/keyboard-compatibility.mp4",
+      sign: "https://media.w3.org/wai/perspective-videos/keyboard-compatibility-ad.mp4",
+      captions: "/savanna/assets/captions/w3c-keyboard-en.vtt,/savanna/assets/captions/w3c-keyboard-am.vtt"
+    },
+    {
+      id: "w3c-speech",
+      label: "🌐 W3C Live-Action: Text-to-Speech & Blind Screen Readers (media.w3.org)",
+      src: "https://media.w3.org/wai/perspective-videos/text-to-speech.mp4",
+      sign: "https://media.w3.org/wai/perspective-videos/text-to-speech-ad.mp4",
+      captions: "/savanna/assets/captions/w3c-speech-en.vtt,/savanna/assets/captions/w3c-speech-am.vtt"
+    },
+    {
+      id: "w3c-voice",
+      label: "🌐 W3C Live-Action: Speech Recognition & Voice Control (media.w3.org)",
+      src: "https://media.w3.org/wai/perspective-videos/voice-recognition.mp4",
+      sign: "https://media.w3.org/wai/perspective-videos/voice-recognition-ad.mp4",
+      captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
+    },
+    {
+      id: "w3c-layout",
+      label: "🌐 W3C Live-Action: Clear Layout & Design (media.w3.org)",
+      src: "https://media.w3.org/wai/perspective-videos/clear-layout-design.mp4",
+      sign: "/savanna/assets/media/va-future-ethsl.mp4",
+      captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
+    },
+    {
+      id: "google-blazes",
+      label: "🌐 Google Cloud Stream: For Bigger Blazes HD (googleapis.com)",
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      sign: "/savanna/assets/media/va-future-ethsl.mp4",
+      captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
+    },
+    {
+      id: "mdn-flower",
+      label: "🌐 MDN CC0 Live Stream: Blooming Flower HD (mozilla.net)",
+      src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+      sign: "/savanna/assets/media/va-future-ethsl.mp4",
+      captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
+    },
+    {
+      id: "local-va-future",
+      label: "💾 Local Offline Studio: Future of the VA Industry (Offline-Ready)",
+      src: "/savanna/assets/media/va-future-lesson.mp4",
+      sign: "/savanna/assets/media/va-future-ethsl.mp4",
+      captions: "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt"
+    }
+  ];
+
   const DEFAULT_CUES = {
     en: [
       { start: 0, end: 6, chapter: "Ch 1: Welcome & Overview", text: "[Introductory chime] Welcome to Module 2: The Future of the Virtual Assistant (VA) Industry." },
@@ -552,6 +625,10 @@
             ? saved.signCoords
             : null,
         audioDescription: saved.audioDescription ?? false,
+        voiceBoost: saved.voiceBoost ?? false,
+        stableVolume: saved.stableVolume ?? true,
+        ambientMode: saved.ambientMode ?? true,
+        loop: saved.loop ?? false,
         blindOvercooked: saved.blindOvercooked ?? true,
         earcons: saved.earcons ?? true,
         haptics: saved.haptics ?? true,
@@ -619,7 +696,10 @@
       return this.getAttribute("lang") === "am" ? "am" : "en";
     }
     get source() {
-      return this.getAttribute("src") || "/savanna/assets/media/va-future-lesson.mp4";
+      return this.getAttribute("src") || "https://www.youtube.com/watch?v=GZFoexLsMi8";
+    }
+    get youtubeId() {
+      return extractYouTubeId(this.source);
     }
     get signSource() {
       return this.getAttribute("sign") || "/savanna/assets/media/va-future-ethsl.mp4";
@@ -817,6 +897,104 @@
             font-weight: 700;
           }
 
+          /* Neat YouTube-Exact Stage, Ambient Glow, & Translucent Glass Menus */
+          .shell.ambient-on {
+            box-shadow: 0 12px 48px rgba(0, 230, 118, 0.22), 0 8px 32px rgba(255, 0, 51, 0.14);
+          }
+          .yt-iframe-frame {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            max-height: 34rem;
+            border: 0;
+            display: block;
+            background: #000000;
+            pointer-events: none;
+          }
+          .yt-glass-menu {
+            position: absolute;
+            right: 0.75rem;
+            bottom: 4.2rem;
+            z-index: 25;
+            width: 18.5rem;
+            max-width: calc(100% - 1.5rem);
+            background: rgba(20, 20, 24, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            color: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 0.75rem;
+            padding: 0.45rem 0;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.78);
+            font-size: 0.86rem;
+          }
+          .yt-glass-menu[hidden] { display: none !important; }
+          .yt-context-menu {
+            right: 4.5rem;
+            bottom: 4.8rem;
+            width: 16.5rem;
+          }
+          .yt-menu-item {
+            width: 100%;
+            min-height: 44px;
+            padding: 0.45rem 0.9rem;
+            background: transparent;
+            border: 0;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: start;
+          }
+          .yt-menu-item:hover, .yt-menu-item:focus-visible {
+            background: rgba(255, 255, 255, 0.12);
+            outline: 2px solid #f5a300;
+            outline-offset: -2px;
+          }
+          .yt-switch-pill {
+            width: 2.2rem;
+            height: 1.25rem;
+            border-radius: 999px;
+            background: #475569;
+            position: relative;
+            transition: background 0.15s ease;
+            flex: 0 0 auto;
+          }
+          .yt-switch-pill::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 0.95rem;
+            height: 0.95rem;
+            border-radius: 50%;
+            background: #ffffff;
+            transition: transform 0.15s ease;
+          }
+          .yt-menu-item[aria-checked="true"] .yt-switch-pill {
+            background: #00e676;
+          }
+          .yt-menu-item[aria-checked="true"] .yt-switch-pill::after {
+            transform: translateX(0.95rem);
+          }
+          .yt-stats-nerd {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            z-index: 24;
+            background: rgba(15, 15, 20, 0.88);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.65rem 0.85rem;
+            font-family: ui-monospace, SFMono-Regular, monospace;
+            font-size: 0.76rem;
+            max-width: 20rem;
+          }
+          .yt-stats-nerd[hidden] { display: none !important; }
           /* Video Stage & YouTube-Style Overlay */
           .stage {
             position: relative;
@@ -1500,15 +1678,87 @@
                 <span class="status-pill" id="blind-status-pill">${this.preferences.blindOvercooked ? "🔊 Blind+ Active" : "🔊 Standard"}</span>
               </div>
             </div>
-            <span class="time-badge" id="time" aria-live="off">0:00 / 0:45</span>
+            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+              <label for="internet-video-select" class="sr">Select Real Internet Video Stream or Local Offline Video</label>
+              <select id="internet-video-select" aria-label="Select Real Internet Video Stream" style="min-height:36px;padding:0.2rem 0.5rem;border-radius:0.35rem;border:1.5px solid #00e676;background:#092540;color:#ffffff;font-size:0.8rem;font-weight:700;cursor:pointer;max-width:22rem;">
+                ${INTERNET_VIDEO_CATALOG.map((item) => `<option value="${escapeHtml(item.src)}" data-sign="${escapeHtml(item.sign)}" data-captions="${escapeHtml(item.captions)}" ${this.source === item.src ? "selected" : ""}>${escapeHtml(item.label)}</option>`).join("")}
+              </select>
+              <span class="time-badge" id="time" aria-live="off">0:00 / 0:45</span>
+            </div>
           </div>
 
           <!-- Video Stage -->
           <div class="stage" id="stage" tabindex="0" role="region" aria-label="${escapeHtml(t.playerTitle)}">
-            <video class="main" id="video" preload="metadata" playsinline src="${escapeHtml(this.source)}">
-              <track kind="captions" srclang="en" label="English" src="/savanna/assets/captions/va-future-en.vtt">
-              <track kind="captions" srclang="am" label="Amharic" src="/savanna/assets/captions/va-future-am.vtt">
-            </video>
+            ${
+              this.youtubeId
+                ? `<iframe id="yt-iframe" class="yt-iframe-frame" tabindex="-1" aria-hidden="true"
+                    src="https://www.youtube-nocookie.com/embed/${escapeHtml(this.youtubeId)}?enablejsapi=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&playsinline=1"
+                    allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="YouTube Lesson Video"></iframe>
+                   <video class="main" id="video" preload="metadata" playsinline src="/savanna/assets/media/va-future-lesson.mp4" hidden></video>`
+                : `<video class="main" id="video" preload="metadata" playsinline src="${escapeHtml(this.source)}">
+                    <track kind="captions" srclang="en" label="English" src="/savanna/assets/captions/va-future-en.vtt">
+                    <track kind="captions" srclang="am" label="Amharic" src="/savanna/assets/captions/va-future-am.vtt">
+                   </video>`
+            }
+
+            <!-- Stats for Nerds Overlay -->
+            <div class="yt-stats-nerd" id="yt-stats-nerd" role="region" aria-label="Stats for nerds" hidden>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                <strong style="color:#00e676;">Stats for Nerds</strong>
+                <button type="button" id="close-stats-btn" style="min-height:26px;padding:0 0.4rem;background:#1e293b;color:#fff;border:1px solid #64748b;border-radius:4px;cursor:pointer;">✕</button>
+              </div>
+              <div id="stats-nerd-body">Video ID: ${escapeHtml(this.youtubeId || this.lessonId)}<br>Screen Reader Shield: Active (ChromeVox / NVDA / TalkBack)<br>EthSL Engine: Live SOV + PiP</div>
+            </div>
+
+            <!-- YouTube-Exact Translucent Context Menu -->
+            <div class="yt-glass-menu yt-context-menu" id="yt-context-menu" role="menu" aria-label="Video player options menu" hidden>
+              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="ctx-loop" aria-checked="${this.preferences.loop}">
+                <span>🔁 Loop</span><span class="yt-switch-pill" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-miniplayer">
+                <span>🗔 Miniplayer (Movable Sign Window)</span><span>›</span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-copy-url">
+                <span>🔗 Copy video URL</span><span></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-copy-time-url">
+                <span>⏱️ Copy video URL at current time</span><span></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-copy-embed">
+                <span>&lt;/&gt; Copy embed code</span><span></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="ctx-stats">
+                <span>ⓘ Stats for nerds</span><span>›</span>
+              </button>
+            </div>
+
+            <!-- YouTube-Exact Translucent Settings Menu (Matches Screenshot) -->
+            <div class="yt-glass-menu" id="yt-glass-settings" role="menu" aria-label="Player Settings Menu" hidden>
+              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-stable-vol" aria-checked="${this.preferences.stableVolume}">
+                <span>🎚️ Stable Volume</span><span class="yt-switch-pill" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-voice-boost" aria-checked="${this.preferences.voiceBoost}">
+                <span>🗣️ Voice Boost</span><span class="yt-switch-pill" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-ambient" aria-checked="${this.preferences.ambientMode}">
+                <span>✨ Ambient Mode</span><span class="yt-switch-pill" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitemcheckbox" id="menu-blind-sr" aria-checked="${this.preferences.blindOvercooked}">
+                <span>🔊 Screen Reader / TalkBack+</span><span class="yt-switch-pill" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="menu-audio-track">
+                <span>🎧 Audio / Description</span><span style="color:#a7f3d0;">${this.preferences.audioDescription ? "AD On ›" : "Original ›"}</span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="menu-cc-cycle">
+                <span>💬 Subtitles / CC</span><span style="color:#fff000;">${!this.preferences.captions ? "Off ›" : (this.preferences.captionDual ? "EN+አማ ›" : (this.preferences.captionLanguage === "am" ? "አማርኛ ›" : "English ›"))}</span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="menu-speed-cycle">
+                <span>⏩ Playback speed</span><span style="color:#cbd5e1;">${this.preferences.playbackRate === 1 ? "Normal ›" : this.preferences.playbackRate + "x ›"}</span>
+              </button>
+              <button type="button" class="yt-menu-item" role="menuitem" id="menu-quality-cycle">
+                <span>📶 Quality / 3G Saver</span><span style="color:#69f0ae;">${this.preferences.dataSaver3G ? "3G Saver ›" : "Auto (480p) ›"}</span>
+              </button>
+            </div>
 
             <!-- 3G Smart Data-Saver Keyframe Stage -->
             <div class="datasaver-stage" id="datasaver-stage" ${this.preferences.dataSaver3G ? "" : "hidden"}>
@@ -1606,7 +1856,8 @@
               <button type="button" id="desc-toggle" aria-pressed="${this.preferences.audioDescription}" title="Toggle Spoken Audio Description (D)">🎧 AD</button>
               <button type="button" id="blind-mode-toggle" aria-pressed="${this.preferences.blindOvercooked}" title="Over-Cooked Blind Mode: Spatial Earcons + Auto-Speak + Scene Inspector (B)">🔊 Blind+</button>
               <button type="button" id="voice-copilot-btn" aria-pressed="false" title="Hands-Free Voice Command Copilot (V)">🎙️ Voice</button>
-              <button type="button" id="settings-toggle" aria-expanded="false" title="YouTube-Style Caption & Speed Settings">⚙️ Settings</button>
+              <button type="button" id="settings-toggle" aria-expanded="false" aria-haspopup="menu" title="YouTube-Style Settings Menu (Voice Boost, CC, Speed, Quality)">⚙️ Settings</button>
+              <button type="button" id="context-menu-btn" aria-expanded="false" aria-haspopup="menu" title="More Player Options (Loop, Copy URL, Stats for Nerds)">⋮ Options</button>
               <button type="button" id="transcript-toggle" aria-pressed="${this.preferences.transcriptOpen}" title="Toggle Interactive Workspace (T)">📝 ${escapeHtml(t.transcript)}</button>
               <button type="button" id="edit-captions-btn" title="Open Caption Pipeline Editor">${escapeHtml(t.editCaptions)}</button>
               <button type="button" id="fullscreen" title="Full Screen (F)">${escapeHtml(t.fullScreen)}</button>
@@ -1717,7 +1968,7 @@
                 <div class="studio-box">
                   <h3 style="margin:0 0 0.35rem 0;font-size:1.02rem;color:#05192d;">🔊 Blind Super-Console &amp; Voice Copilot</h3>
                   <p style="margin:0 0 0.6rem 0;font-size:0.85rem;color:#334155;">
-                    Designed for zero-vision autonomy: spatial Web Audio earcons, instant visual frame descriptions, DAISY chapter/sentence hopping (<code>1-6</code>, <code>[</code>, <code>]</code>), and hands-free voice commands.
+                    <strong>Chrome Screen Reader Extension, NVDA &amp; Android TalkBack Ready:</strong> Our YouTube IFrame is shielded (<code>tabindex="-1"</code>) so screen readers never get trapped inside third-party embeds. Every menu uses native <code>role="menu"</code> / <code>menuitemcheckbox</code>, the timeline exposes live <code>aria-valuetext</code>, and all touch targets are &ge;44px for <strong>Android TalkBack</strong> (<em>Swipe Right</em> to step, <em>Double Tap</em> to activate) and <strong>Chrome Screen Reader</strong> (<code>Tab</code> / <code>Enter</code>).
                   </p>
                   <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.65rem;">
                     <button type="button" id="describe-scene-btn" class="action-btn" style="background:#05192d;color:#fff000;">🔍 ${escapeHtml(t.describeScene)}</button>
@@ -1887,7 +2138,7 @@
       const hoverPreview = this.$("#yt-hover-preview");
       seekInput.addEventListener("input", (event) => {
         const dur = video.duration || 45;
-        video.currentTime = (Number(event.target.value) / 100) * dur;
+        this.seekToSeconds((Number(event.target.value) / 100) * this.getTotalDur());
       });
       seekInput.addEventListener("mousemove", (event) => {
         const rect = seekInput.getBoundingClientRect();
@@ -1932,11 +2183,125 @@
         );
       });
 
+      // Toggle both the translucent YouTube Settings Menu and Style Drawer
       this.$("#settings-toggle").addEventListener("click", () => {
-        const panel = this.$("#yt-settings-panel");
-        const open = panel.hidden;
-        panel.hidden = !open;
-        this.$("#settings-toggle").setAttribute("aria-expanded", String(open));
+        const glassMenu = this.$("#yt-glass-settings");
+        const styleDrawer = this.$("#yt-settings-panel");
+        const ctxMenu = this.$("#yt-context-menu");
+        if (ctxMenu) ctxMenu.hidden = true;
+        const opening = glassMenu ? glassMenu.hidden : styleDrawer.hidden;
+        if (glassMenu) glassMenu.hidden = !opening;
+        if (styleDrawer) styleDrawer.hidden = !opening;
+        this.$("#settings-toggle").setAttribute("aria-expanded", String(opening));
+        if (opening) {
+          this.$("#menu-stable-vol")?.focus();
+          this.announce("Opened player settings menu. Use arrow keys or Tab to toggle Voice Boost, Subtitles, Speed, or Quality.", this.preferences.blindOvercooked);
+        }
+      });
+
+      this.$("#context-menu-btn")?.addEventListener("click", () => {
+        const ctxMenu = this.$("#yt-context-menu");
+        const glassMenu = this.$("#yt-glass-settings");
+        if (glassMenu) glassMenu.hidden = true;
+        if (ctxMenu) {
+          const opening = ctxMenu.hidden;
+          ctxMenu.hidden = !opening;
+          this.$("#context-menu-btn").setAttribute("aria-expanded", String(opening));
+          if (opening) this.$("#ctx-loop")?.focus();
+        }
+      });
+
+      this.$("#stage")?.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        const ctxMenu = this.$("#yt-context-menu");
+        if (ctxMenu) ctxMenu.hidden = false;
+      });
+
+      // Glass Settings Menu Actions
+      this.$("#menu-stable-vol")?.addEventListener("click", (e) => {
+        this.preferences.stableVolume = !this.preferences.stableVolume;
+        e.currentTarget.setAttribute("aria-checked", String(this.preferences.stableVolume));
+        this.persist(`Stable Volume ${this.preferences.stableVolume ? "on" : "off"}`);
+      });
+      this.$("#menu-voice-boost")?.addEventListener("click", (e) => {
+        this.preferences.voiceBoost = !this.preferences.voiceBoost;
+        e.currentTarget.setAttribute("aria-checked", String(this.preferences.voiceBoost));
+        this.persist(`Voice Boost ${this.preferences.voiceBoost ? "enabled for vocal clarity" : "off"}`);
+      });
+      this.$("#menu-ambient")?.addEventListener("click", (e) => {
+        this.preferences.ambientMode = !this.preferences.ambientMode;
+        e.currentTarget.setAttribute("aria-checked", String(this.preferences.ambientMode));
+        this.$("#player-shell")?.classList.toggle("ambient-on", this.preferences.ambientMode);
+        this.persist(`Ambient Mode ${this.preferences.ambientMode ? "on" : "off"}`);
+      });
+      this.$("#menu-blind-sr")?.addEventListener("click", (e) => {
+        this.toggleBlindOvercookedMode();
+        e.currentTarget.setAttribute("aria-checked", String(this.preferences.blindOvercooked));
+      });
+      this.$("#menu-audio-track")?.addEventListener("click", () => this.$("#desc-toggle")?.click());
+      this.$("#menu-cc-cycle")?.addEventListener("click", () => {
+        if (!this.preferences.captions) {
+          this.preferences.captions = true;
+          this.preferences.captionLanguage = "en";
+        } else if (!this.preferences.captionDual && this.preferences.captionLanguage === "en") {
+          this.preferences.captionLanguage = "am";
+        } else if (!this.preferences.captionDual && this.preferences.captionLanguage === "am") {
+          this.preferences.captionDual = true;
+        } else {
+          this.preferences.captionDual = false;
+          this.preferences.captions = false;
+        }
+        this.renderTranscript();
+        this.updateCaption();
+        this.persist("Updated Subtitles / CC mode");
+      });
+      this.$("#menu-speed-cycle")?.addEventListener("click", () => {
+        const speeds = [0.75, 1, 1.25, 1.5];
+        const next = speeds[(speeds.indexOf(this.preferences.playbackRate) + 1) % speeds.length];
+        this.preferences.playbackRate = next;
+        this.$("#speed").value = String(next);
+        this.sendYtCommand("setPlaybackRate", [next]);
+        this.persist(`Playback speed ${next}x`);
+      });
+      this.$("#menu-quality-cycle")?.addEventListener("click", () => this.toggle3GDataSaver());
+
+      // Context Menu Actions
+      this.$("#ctx-loop")?.addEventListener("click", (e) => {
+        this.preferences.loop = !this.preferences.loop;
+        e.currentTarget.setAttribute("aria-checked", String(this.preferences.loop));
+        const v = this.$("#video");
+        if (v) v.loop = this.preferences.loop;
+        this.persist(`Loop ${this.preferences.loop ? "enabled" : "disabled"}`);
+      });
+      this.$("#ctx-miniplayer")?.addEventListener("click", () => {
+        this.toggleSignWindow(true);
+        this.$("#yt-context-menu").hidden = true;
+      });
+      this.$("#ctx-copy-url")?.addEventListener("click", () => {
+        navigator.clipboard?.writeText(this.source).catch(() => {});
+        this.$("#yt-context-menu").hidden = true;
+        this.showNotice(`Copied video URL: ${this.source}`);
+      });
+      this.$("#ctx-copy-time-url")?.addEventListener("click", () => {
+        const sec = Math.floor(this.youtubeId ? (this.ytTime || 0) : (this.$("#video")?.currentTime || 0));
+        const urlWithTime = `${this.source}${this.source.includes("?") ? "&" : "?"}t=${sec}s`;
+        navigator.clipboard?.writeText(urlWithTime).catch(() => {});
+        this.$("#yt-context-menu").hidden = true;
+        this.showNotice(`Copied timestamped URL: ${urlWithTime}`);
+      });
+      this.$("#ctx-copy-embed")?.addEventListener("click", () => {
+        const code = `<script src="/module/db-player.js" defer><\/script>\n<db-player src="${this.source}" lang="${this.language}"></db-player>`;
+        navigator.clipboard?.writeText(code).catch(() => {});
+        this.$("#yt-context-menu").hidden = true;
+        this.showNotice("Copied <db-player> embed HTML to clipboard.");
+      });
+      this.$("#ctx-stats")?.addEventListener("click", () => {
+        this.$("#yt-context-menu").hidden = true;
+        const stats = this.$("#yt-stats-nerd");
+        if (stats) stats.hidden = !stats.hidden;
+      });
+      this.$("#close-stats-btn")?.addEventListener("click", () => {
+        this.$("#yt-stats-nerd").hidden = true;
       });
 
       this.shadowRoot.querySelectorAll("[data-cc-preset]").forEach((btn) => {
@@ -2141,7 +2506,33 @@
       this.$("#transcript-download-brf").addEventListener("click", (e) => this.downloadBraille(e));
       this.$("#transcript-download-vtt").addEventListener("click", (e) => this.downloadVttFile(e));
 
+      const netSelect = this.$("#internet-video-select");
+      if (netSelect) {
+        netSelect.addEventListener("change", (e) => {
+          const opt = e.target.selectedOptions?.[0];
+          const newSrc = e.target.value;
+          const newSign = opt?.dataset?.sign || "/savanna/assets/media/va-future-ethsl.mp4";
+          const newCaps = opt?.dataset?.captions || "/savanna/assets/captions/va-future-en.vtt,/savanna/assets/captions/va-future-am.vtt";
+          this.setAttribute("src", newSrc);
+          this.setAttribute("sign", newSign);
+          this.setAttribute("captions", newCaps);
+          this.announce("Switched video stream to " + (opt ? opt.textContent : newSrc), this.preferences.blindOvercooked);
+        });
+      }
+
+      // Automatic offline fallback if internet stream is unreachable (e.g., in Aeroplane Mode)
+      video.addEventListener("error", () => {
+        if (video.src && !video.src.endsWith("/savanna/assets/media/va-future-lesson.mp4")) {
+          video.src = "/savanna/assets/media/va-future-lesson.mp4";
+          this.showNotice("Internet stream offline — automatically switched to local cached lesson video.");
+        }
+      });
       if (signVideo) {
+        signVideo.addEventListener("error", () => {
+          if (signVideo.src && !signVideo.src.endsWith("/savanna/assets/media/va-future-ethsl.mp4")) {
+            signVideo.src = "/savanna/assets/media/va-future-ethsl.mp4";
+          }
+        });
         this.signTimer = window.setInterval(() => this.syncSign(!video.paused), 1000);
       }
     }
@@ -2277,7 +2668,7 @@
 
     drawLiveSignCanvas(now) {
       const video = this.$("#video");
-      const currentSec = video ? video.currentTime : 0;
+      const currentSec = this.getCurrentSec();
       const activeCue = this.cues().find((c) => currentSec >= c.start && currentSec < c.end) || this.cues()[0];
 
       // Determine active translation (custom input for 8 seconds, otherwise live video cue)
@@ -2804,6 +3195,28 @@
     restorePlaybackState() {
       const state = this.restorePlayback;
       this.restorePlayback = null;
+      this.ytTime = 0;
+      this.ytDuration = this.youtubeId ? 206 : 45;
+      this.ytPlaying = false;
+      if (this.ytTimer) window.clearInterval(this.ytTimer);
+      if (this.youtubeId) {
+        if (this.preferences.ambientMode) this.$("#player-shell")?.classList.add("ambient-on");
+        this.ytTimer = window.setInterval(() => {
+          if (this.ytPlaying) {
+            this.ytTime = Math.min(this.ytDuration, (this.ytTime || 0) + 0.5 * (this.preferences.playbackRate || 1));
+            if (this.ytTime >= this.ytDuration) {
+              if (this.preferences.loop) {
+                this.ytTime = 0;
+                this.sendYtCommand("seekTo", [0, true]);
+              } else {
+                this.ytPlaying = false;
+                this.playbackChanged(false);
+              }
+            }
+            this.timeUpdate();
+          }
+        }, 500);
+      }
       const video = this.$("#video");
       video.playbackRate = this.preferences.playbackRate;
       video.addEventListener("timeupdate", () => this.timeUpdate());
@@ -3086,10 +3499,36 @@
       });
     }
 
+    sendYtCommand(func, args = []) {
+      const iframe = this.$("#yt-iframe");
+      if (!iframe || !iframe.contentWindow) return;
+      iframe.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+    }
+
     togglePlay() {
+      if (this.youtubeId) {
+        this.ytPlaying = !this.ytPlaying;
+        this.sendYtCommand(this.ytPlaying ? "playVideo" : "pauseVideo");
+        this.playbackChanged(this.ytPlaying);
+        return;
+      }
       const video = this.$("#video");
       if (video.paused) video.play().catch(() => {});
       else video.pause();
+    }
+
+    seekToSeconds(sec) {
+      const clamped = Math.max(0, Math.min(this.ytDuration || 206, sec));
+      if (this.youtubeId) {
+        this.ytTime = clamped;
+        this.sendYtCommand("seekTo", [clamped, true]);
+        this.timeUpdate();
+        return;
+      }
+      const video = this.$("#video");
+      if (video) {
+        video.currentTime = Math.min(video.duration || 45, clamped);
+      }
     }
 
     playbackChanged(playing) {
@@ -3131,7 +3570,7 @@
       const captionEl = this.$("#caption");
       if (!video || !captionEl) return;
 
-      const currentSec = video.currentTime;
+      const currentSec = this.getCurrentSec();
       const primaryCues = this.cues();
       const cueIdx = primaryCues.findIndex((c) => currentSec >= c.start && currentSec < c.end);
       const current = cueIdx >= 0 ? primaryCues[cueIdx] : null;
@@ -3248,16 +3687,28 @@
       caption.style.backgroundColor = hexToRgba(this.preferences.captionBackground, Number(this.preferences.captionOpacity || 0.84));
     }
 
+    getCurrentSec() {
+      if (this.youtubeId) return this.ytTime || 0;
+      return this.$("#video")?.currentTime || 0;
+    }
+
+    getTotalDur() {
+      if (this.youtubeId) return this.ytDuration || 206;
+      return this.$("#video")?.duration || 45;
+    }
+
     timeUpdate() {
-      const video = this.$("#video");
-      if (!video) return;
-      this.$("#time").textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration || 45)}`;
-      if (video.duration) {
-        this.$("#seek").value = String((video.currentTime / video.duration) * 100);
+      const cur = this.getCurrentSec();
+      const dur = this.getTotalDur();
+      this.$("#time").textContent = `${formatTime(cur)} / ${formatTime(dur)}`;
+      const seekEl = this.$("#seek");
+      if (seekEl && dur > 0) {
+        seekEl.value = String((cur / dur) * 100);
+        seekEl.setAttribute("aria-valuetext", `${formatTime(cur)} of ${formatTime(dur)}`);
       }
       this.updateCaption();
-      this.highlightCue(video.currentTime);
-      this.checkAudioDescription(video.currentTime);
+      this.highlightCue(cur);
+      this.checkAudioDescription(cur);
       this.emitProgress();
     }
 

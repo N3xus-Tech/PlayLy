@@ -138,5 +138,19 @@ class Track2PluginTests(unittest.TestCase):
         self.assertIn("va-future-ethsl.mp4", data["sign"])
 
 
+
+    def test_real_w3c_internet_video_lessons(self) -> None:
+        w3c_lesson = get_lesson("w3c-video-captions")
+        self.assertEqual(
+            w3c_lesson["video"],
+            "https://media.w3.org/wai/perspective-videos/video-captions.mp4",
+        )
+        en_caps = get_transcript("w3c-video-captions", lang="en")
+        am_caps = get_transcript("w3c-video-captions", lang="am")
+        self.assertGreaterEqual(len(en_caps["cues"]), 5)
+        self.assertGreaterEqual(len(am_caps["cues"]), 5)
+        self.assertIn("Video Captions", en_caps["cues"][0]["text"])
+
+
 if __name__ == "__main__":
     unittest.main()

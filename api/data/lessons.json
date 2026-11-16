@@ -1,9 +1,28 @@
 {
+  "yt-3d-ceramics": {
+    "id": "yt-3d-ceramics",
+    "title": "Build 3D Websites with Kimi Code - Tutorial #4 (YouTube)",
+    "video": "https://www.youtube.com/watch?v=GZFoexLsMi8",
+    "fallback_video": "/savanna/assets/media/va-future-lesson.mp4",
+    "sign": "/savanna/assets/media/va-future-ethsl.mp4",
+    "audio": "/savanna/assets/media/va-future-audio.mp3",
+    "captions": {
+      "en": "/savanna/assets/captions/kimi-3d-en.vtt",
+      "am": "/savanna/assets/captions/kimi-3d-am.vtt"
+    },
+    "descriptions": {
+      "en": "/savanna/assets/captions/va-future-ad-en.vtt",
+      "am": "/savanna/assets/captions/va-future-ad-am.vtt"
+    },
+    "offline_pack_bytes": 285000,
+    "viewer_url": "/savanna/pages/concept-with-navigation.html?lesson=yt-3d-ceramics"
+  },
   "va-future": {
     "id": "va-future",
     "title": "The Future of the VA Industry",
-    "video": "/savanna/assets/media/va-future-lesson.mp4",
-    "sign": "/savanna/assets/media/va-future-ethsl.mp4",
+    "video": "https://media.w3.org/wai/perspective-videos/video-captions.mp4",
+    "fallback_video": "/savanna/assets/media/va-future-lesson.mp4",
+    "sign": "https://media.w3.org/wai/perspective-videos/video-captions-ad.mp4",
     "audio": "/savanna/assets/media/va-future-audio.mp3",
     "captions": {
       "en": "/savanna/assets/captions/va-future-en.vtt",
@@ -13,7 +32,76 @@
       "en": "/savanna/assets/captions/va-future-ad-en.vtt",
       "am": "/savanna/assets/captions/va-future-ad-am.vtt"
     },
-    "offline_pack_bytes": 285000
+    "offline_pack_bytes": 285000,
+    "viewer_url": "/savanna/pages/concept-with-navigation.html?lesson=va-future"
+  },
+  "w3c-video-captions": {
+    "id": "w3c-video-captions",
+    "title": "W3C WAI Live-Action: Video Captions & Deaf Accessibility",
+    "video": "https://media.w3.org/wai/perspective-videos/video-captions.mp4",
+    "sign": "https://media.w3.org/wai/perspective-videos/video-captions-ad.mp4",
+    "audio": "/savanna/assets/media/va-future-audio.mp3",
+    "captions": {
+      "en": "/savanna/assets/captions/w3c-captions-en.vtt",
+      "am": "/savanna/assets/captions/w3c-captions-am.vtt"
+    },
+    "descriptions": {
+      "en": "/savanna/assets/captions/va-future-ad-en.vtt",
+      "am": "/savanna/assets/captions/va-future-ad-am.vtt"
+    },
+    "offline_pack_bytes": 285000,
+    "viewer_url": "/savanna/pages/concept-with-navigation.html?lesson=w3c-video-captions"
+  },
+  "w3c-keyboard": {
+    "id": "w3c-keyboard",
+    "title": "W3C WAI Live-Action: Keyboard Compatibility & Motor Access",
+    "video": "https://media.w3.org/wai/perspective-videos/keyboard-compatibility.mp4",
+    "sign": "https://media.w3.org/wai/perspective-videos/keyboard-compatibility-ad.mp4",
+    "audio": "/savanna/assets/media/va-future-audio.mp3",
+    "captions": {
+      "en": "/savanna/assets/captions/w3c-keyboard-en.vtt",
+      "am": "/savanna/assets/captions/w3c-keyboard-am.vtt"
+    },
+    "descriptions": {
+      "en": "/savanna/assets/captions/va-future-ad-en.vtt",
+      "am": "/savanna/assets/captions/va-future-ad-am.vtt"
+    },
+    "offline_pack_bytes": 285000,
+    "viewer_url": "/savanna/pages/concept-with-navigation.html?lesson=w3c-keyboard"
+  },
+  "w3c-text-to-speech": {
+    "id": "w3c-text-to-speech",
+    "title": "W3C WAI Live-Action: Text-to-Speech & Blind Screen Readers",
+    "video": "https://media.w3.org/wai/perspective-videos/text-to-speech.mp4",
+    "sign": "https://media.w3.org/wai/perspective-videos/text-to-speech-ad.mp4",
+    "audio": "/savanna/assets/media/va-future-audio.mp3",
+    "captions": {
+      "en": "/savanna/assets/captions/w3c-speech-en.vtt",
+      "am": "/savanna/assets/captions/w3c-speech-am.vtt"
+    },
+    "descriptions": {
+      "en": "/savanna/assets/captions/va-future-ad-en.vtt",
+      "am": "/savanna/assets/captions/va-future-ad-am.vtt"
+    },
+    "offline_pack_bytes": 285000,
+    "viewer_url": "/savanna/pages/concept-with-navigation.html?lesson=w3c-text-to-speech"
+  },
+  "w3c-voice-recognition": {
+    "id": "w3c-voice-recognition",
+    "title": "W3C WAI Live-Action: Speech Recognition & Voice Control",
+    "video": "https://media.w3.org/wai/perspective-videos/voice-recognition.mp4",
+    "sign": "https://media.w3.org/wai/perspective-videos/voice-recognition-ad.mp4",
+    "audio": "/savanna/assets/media/va-future-audio.mp3",
+    "captions": {
+      "en": "/savanna/assets/captions/va-future-en.vtt",
+      "am": "/savanna/assets/captions/va-future-am.vtt"
+    },
+    "descriptions": {
+      "en": "/savanna/assets/captions/va-future-ad-en.vtt",
+      "am": "/savanna/assets/captions/va-future-ad-am.vtt"
+    },
+    "offline_pack_bytes": 285000,
+    "viewer_url": "/savanna/pages/concept-with-navigation.html?lesson=w3c-voice-recognition"
   },
   "html-h1-tag": {
     "id": "html-h1-tag",
@@ -29,7 +117,8 @@
       "en": "/savanna/assets/captions/va-future-ad-en.vtt",
       "am": "/savanna/assets/captions/va-future-ad-am.vtt"
     },
-    "offline_pack_bytes": 285000
+    "offline_pack_bytes": 285000,
+    "viewer_url": "/savanna/pages/concept-with-navigation.html?lesson=html-h1-tag"
   },
   "html-div-intro": {
     "id": "html-div-intro",
